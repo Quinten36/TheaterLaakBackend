@@ -1,0 +1,15 @@
+# Ignore compiled binaries
+bin/
+obj/
+
+# Ignore configuration files
+appsettings.json
+nuget.config
+appsettings.development.json
+
+
+# Ignore IDE presets
+.vs/
+.vscode/
+.idea/
+
