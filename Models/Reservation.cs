@@ -2,10 +2,17 @@ namespace TheaterLaakBackend.Models;
 
 public class Reservation
 {
-    public int id { get; set; }
-    public int account { get; set; }
-    public int hall { get; set; }
-    public DateTime start { get; set; }
-    public DateTime end { get; set; }
-    public bool hasPaid { get; set; }
+    public int Id { get; set; }
+    public DateTime Start { get; set; }
+    public DateTime End { get; set; }
+    public bool HasPaid { get; set; }
+    
+    public int AccountId { get; set; }
+    public Account Account { get; set; }
+    
+    public int HallId { get; set; }
+    public Hall Hall { get; set; }
+
 }
+
+//TODO: Reservering veranderen naar Reservation in SQL model
