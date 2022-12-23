@@ -2,7 +2,10 @@ namespace TheaterLaakBackend.Models;
 
 public class Artist
 {
-    public int id { get; set; }
-    public string name { get; set; }
-    public int group { get; set; }
+    public int Id { get; set; }
+    public string Name { get; set; }
+
+    private List<Group> Groups { get; } = new();
 }
+
+//TODO: SQL model many to many naar group (pivot)
