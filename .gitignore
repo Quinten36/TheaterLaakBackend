@@ -6,10 +6,16 @@ obj/
 appsettings.json
 nuget.config
 appsettings.development.json
-
+Folder.DotSettings.user
 
 # Ignore IDE presets
 .vs/
 .vscode/
 .idea/
+
+# Ignore the SQLite Database
+Database.db
+Database.db-shm
+Database.db-wal
+
 
