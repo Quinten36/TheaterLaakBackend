@@ -2,8 +2,11 @@ namespace TheaterLaakBackend.Models;
 
 public class Group
 {
-    public int id { get; set; }
-    public string name { get; set; }
-    public string logo { get; set; }
-    public string? website { get; set; }
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string Logo { get; set; }
+    public string? Website { get; set; }
+
+    public List<Artist> Artists { get; } = new();
+    public List<Program> Programs { get; } = new();
 }
