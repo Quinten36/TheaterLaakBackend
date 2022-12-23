@@ -2,13 +2,19 @@ namespace TheaterLaakBackend.Models;
 
 public class Show
 {
-    public int id { get; set; }
-    public DateTime start { get; set; }
-    public DateTime end { get; set; }
-    public int hall { get; set; }
-    public int program { get; set; }
-    public int? band { get; set; }
-    public double firstClassPrice { get; set; }
-    public double? secondClassPrice { get; set; }
+    public int Id { get; set; }
+    public DateTime Start { get; set; }
+    public DateTime End { get; set; }
+    public double FirstClassPrice { get; set; }
+    public double? SecondClassPrice { get; set; }
     public double? ThirdClassPrice { get; set; }
+    
+    public int HallId { get; set; }
+    public Hall Hall { get; set; }
+    
+    public int ProgramId { get; set; }
+    public Program Program { get; set; }
+    
+    public int? GroupId { get; set; }
+    public Group? Group { get; set; }
 }
