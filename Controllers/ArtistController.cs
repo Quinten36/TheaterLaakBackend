@@ -49,6 +49,28 @@ namespace TheaterLaakBackend.Controllers
             return artist;
         }
 
+        // GET: api/artist/byBand/:id
+        [HttpGet("byBand/{id}")]
+        public async Task<ActionResult<List<Artist>>> GetArtistByBand(int id)
+        {
+          if (_context.Artists == null)
+          {
+              return NotFound();
+          }
+            //Get all the artists whole belongs to the group that has been requested
+            foreach (Group a in await _context.Groups.Include("Artists").Where(g => g.Id == id).ToListAsync())
+            {
+                List<Artist> aa = a.Artists.ToList();
+            }
+
+            if (artist == null)
+            {
+                return NotFound();
+            }
+
+            return aa;
+        }
+
         // PUT: api/Artist/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
