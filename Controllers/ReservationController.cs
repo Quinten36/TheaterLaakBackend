@@ -1,5 +1,8 @@
 using System;
 using System.Text;
+// using System.Web.Http;
+using System.Web;
+using System.Net;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TheaterLaakBackend.Models;
-using System.Web;
+
 
 namespace TheaterLaakBackend.Controllers
 {
@@ -36,15 +39,17 @@ namespace TheaterLaakBackend.Controllers
 
 		// GET: api/artist/byBand/:id
 		[HttpGet("filtered")]
-		public async Task<ActionResult<IEnumerable<Reservation>>> GetFilteredReservations(ReservationFilter filter)
+		public async Task<ActionResult<IEnumerable<Reservation>>> GetFilteredReservations()
 		{
 			if (_context.Reservations == null)
 			{
 				return NotFound();
 			}
 
-			var startDate = filter.Start;
-			var endDate = filter.End;
+			Console.WriteLine();
+
+			var startDate = DateTime.ParseExact(HttpContext.Request.Query["start"], "MM-dd-yyyy",System.Globalization.CultureInfo.InvariantCulture);
+			var endDate = DateTime.ParseExact(HttpContext.Request.Query["end"], "MM-dd-yyyy",System.Globalization.CultureInfo.InvariantCulture);
 
 			List<Reservation> reservations = _context.Reservations.Where(r => r.Start > startDate && r.End < endDate).ToList();
 
