@@ -53,6 +53,7 @@ namespace TheaterLaakBackend.Controllers
         [HttpGet("byBand/{id}")]
         public async Task<ActionResult<List<Artist>>> GetArtistByBand(int id)
         {
+            List<Artist> aa = new List<Artist>();
           if (_context.Artists == null)
           {
               return NotFound();
@@ -60,10 +61,10 @@ namespace TheaterLaakBackend.Controllers
             //Get all the artists whole belongs to the group that has been requested
             foreach (Group a in await _context.Groups.Include("Artists").Where(g => g.Id == id).ToListAsync())
             {
-                List<Artist> aa = a.Artists.ToList();
+                aa = a.Artists.ToList();
             }
 
-            if (artist == null)
+            if (aa == null)
             {
                 return NotFound();
             }
