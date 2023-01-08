@@ -46,8 +46,6 @@ namespace TheaterLaakBackend.Controllers
 				return NotFound();
 			}
 
-			Console.WriteLine();
-
 			var startDate = DateTime.ParseExact(HttpContext.Request.Query["start"], "MM-dd-yyyy",System.Globalization.CultureInfo.InvariantCulture);
 			var endDate = DateTime.ParseExact(HttpContext.Request.Query["end"], "MM-dd-yyyy",System.Globalization.CultureInfo.InvariantCulture);
 
