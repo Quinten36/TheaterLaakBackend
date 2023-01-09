@@ -13,22 +13,22 @@ namespace TheaterLaakBackend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MailController : ControllerBase
+    public class RegistratieController : ControllerBase
     {
         private readonly TheaterDbContext _context;
 
-        public MailController(TheaterDbContext context)
+        public RegistratieController(TheaterDbContext context)
         {
             _context = context;
         }
-
-        // GET: api/Account
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Account>>> SendMail()
-        {
-            VerificiatieMail vf = new VerificiatieMail();
-            return NoContent();
+[HttpPost]
+public async Task<ActionResult<Account>> AddUser([FromBody] Account Account)
+{
+    Console.WriteLine("AddUser called");
+    Console.WriteLine(Account.Email);
+    await _context.Accounts.AddAsync(Account);
+    await _context.SaveChangesAsync();
+    return Ok();
         }
-
     }
 }
