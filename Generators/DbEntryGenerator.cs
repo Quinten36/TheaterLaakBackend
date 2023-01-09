@@ -1,6 +1,7 @@
 using Bogus;
 using Bogus.DataSets;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
 using Microsoft.EntityFrameworkCore;
 using TheaterLaakBackend.Controllers;
@@ -182,6 +183,7 @@ public class DbEntryGenerator
             _context.Seats.Add(seat);
         }
         _context.SaveChanges();
+        //TODO: Seats zijn statisch? kunnen niet random zijn. User story met seats aanvullen met realistische seats
     }
     
     public void ShowGenerator()
@@ -219,13 +221,15 @@ public class DbEntryGenerator
             var seats = _context.Seats;
             var accounts = _context.Accounts;
             var shows = _context.Shows;
+            var orders = _context.Orders;
 
             var start = _faker.Date.Between(DateTime.Now.AddYears(-1), DateTime.Now );
             var ticket = new Ticket()
             {
                 SeatId = _faker.Random.Int(1, seats.Count()),
                 AccountId = _faker.Random.Int(1, accounts.Count()),
-                ShowId = _faker.Random.Int(1, shows.Count())
+                ShowId = _faker.Random.Int(1, shows.Count()),
+                OrderId = _faker.Random.Int(1, orders.Count())
             };
             
             _context.Tickets.Add(ticket);
@@ -284,6 +288,32 @@ public class DbEntryGenerator
         }
         _context.SaveChanges();
     }
+    
+    public void ArtistGroupPivotGenerator()
+    {
+        var artists = _context.Artists;
+        var groups = _context.Groups;
+        
+        foreach (var artist in artists)
+        {
+            var randomTotalgroups = _faker.Random.Int(0, 5);
+            var usedGroupIds = new HashSet<int>();
+
+            for (int i = 0; i < randomTotalgroups; i++)
+            {
+                int randomGroupId;
+                do
+                {
+                    randomGroupId = _faker.Random.Int(1, groups.Count());
+                }
+                while (usedGroupIds.Contains(randomGroupId));
+
+                usedGroupIds.Add(randomGroupId);
+                artist.Groups.Add(groups.First(genre => genre.Id == randomGroupId));
+            }
+        }
+        _context.SaveChanges();
+    }
 
     public void DatabaseGenerator()
     {
@@ -300,8 +330,6 @@ public class DbEntryGenerator
         TicketGenerator();
         AccountGenrePivotGenerator();
         GenreProgramPivotGenerator();
+        ArtistGroupPivotGenerator();
     }
-    
 }
-
-// dotnet-aspnet-codegenerator controller -name TicketController -async -sqlite -api -m Ticket -dc TheaterDbContext -outDir Controllers

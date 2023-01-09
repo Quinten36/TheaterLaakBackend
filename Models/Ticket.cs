@@ -12,7 +12,7 @@ public class Ticket
     
     public int ShowId { get; set; }
     public Show Show { get; set; }
-
-
-
+    
+    public int OrderId { get; set; }
+    public Order Order { get; set; }
 }
