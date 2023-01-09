@@ -21,14 +21,23 @@ namespace TheaterLaakBackend.Controllers
         {
             _context = context;
         }
-[HttpPost]
-public async Task<ActionResult<Account>> AddUser([FromBody] Account Account)
-{
-    Console.WriteLine("AddUser called");
-    Console.WriteLine(Account.Email);
-    await _context.Accounts.AddAsync(Account);
-    await _context.SaveChangesAsync();
-    return Ok();
+        [HttpPost]
+        public async Task<ActionResult<Account>> AddUser([FromBody] Account Account)
+        {
+            //Kijkt of account al bestaand zoniet statuscode 409
+            var existingAccount = await _context.Accounts
+                .Where(a => a.Username == Account.Username || a.Email == Account.Email)
+                .FirstOrDefaultAsync();
+            if (existingAccount != null)
+            {
+                //statuscode 409
+                return Conflict();
+            }
+
+            //voeg nieuwe gebruiker toe aan de database
+            await _context.Accounts.AddAsync(Account);
+            await _context.SaveChangesAsync();
+            return Ok();
         }
     }
 }
