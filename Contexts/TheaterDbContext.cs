@@ -23,6 +23,15 @@ public class TheaterDbContext : DbContext
     {
         optionsBuilder.UseSqlite("Data Source=Database.db");
     }
+    
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+        builder.Entity<Models.Program>().
+            HasMany(program => program.Genres).
+            WithMany(genre => genre.Programs).
+            UsingEntity(pivot => pivot.ToTable("GenreProgram"));
+    }
 }
 
 //TODO: verdeling in Services maken in SQL model

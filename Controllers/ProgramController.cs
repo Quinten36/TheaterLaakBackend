@@ -28,7 +28,11 @@ namespace TheaterLaakBackend.Controllers
           {
               return NotFound();
           }
-            return await _context.Programs.ToListAsync();
+          var programs = await _context.Programs.Include(program => program.Genres).ToListAsync();
+          programs.ForEach(program => program.Genres?.ForEach(genre => genre.Programs = new List<Models.Program>()));
+          
+          
+            return programs;
         }
 
         // GET: api/Program/5
