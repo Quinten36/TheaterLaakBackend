@@ -21,26 +21,28 @@ namespace TheaterLaakBackend.Controllers
         {
             _context = context;
         }
-        [HttpPost]
-        public async Task<ActionResult<Account>> AddUser([FromBody] Account Account)
-        {
-            //Kijkt of account al bestaand zoniet statuscode 409
-            var existingAccount = await _context.Accounts
-                .Where(a => a.Username == Account.Username || a.Email == Account.Email)
-                .FirstOrDefaultAsync();
-            if (existingAccount != null)
-            {
-                //statuscode 409
-                return StatusCode(409);
-            }
+      [HttpPost]
+public async Task<ActionResult<Account>> AddUser([FromBody] Account Account)
+{
+    // Check if account already exists
+    var existingAccount = await _context.Accounts
+        .Where(a => a.Username == Account.Username)
+        .FirstOrDefaultAsync();
 
-            //voeg nieuwe gebruiker toe aan de database
-            await _context.Accounts.AddAsync(Account);
-            await _context.SaveChangesAsync();
-            return Ok();
-        }
+    if (existingAccount != null)
+    {
+        return Conflict(new { message = "Account bestaad al." });
+    }
+        PasswordChecker pc = new PasswordChecker();
+        var UitslagPasswordCheck = pc.PasswordCheck(Account.Username , Account.Password);
+    if( UitslagPasswordCheck != "Succes"){
+        return BadRequest(new { message = UitslagPasswordCheck });
     }
 
-
-    // string [] woordenlijst = System.IO.File.ReadAllLines("Woordenlijst.txt");    
+    // Add the new account to the database
+    await _context.Accounts.AddAsync(Account);
+    await _context.SaveChangesAsync();
+    return Ok();
+        }
+    }
 }

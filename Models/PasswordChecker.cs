@@ -4,15 +4,56 @@ public class PasswordChecker
 {
 
 
+    //Kijkt voor patronen in het wachtwoord bijvoorbeeld ABCABC returned true . ABCGFD false
+
+
+    public string PasswordCheck(string username, string password)
+    {
+        if (CheckForSimilaritiesUserNameAndPassword(username, password))
+        {
+            return "Het wachtwoord is hetzelfde als de gebruikersnaam verander deze";
+        }
+        if (CheckForTop10WachtwoordenLijst(password))
+        {
+            return "Het wachtwoord komt te vaak voor verandere deze.";
+        }
+        if (CheckForRepeatingCharacters(password))
+        {
+            return "Het wachtwoord heeft een herhalend patroon verander dit naar een veiliger wachtwoord";
+        }
+
+
+        return "Succes";
+    }
+
     public string RemoveSpecialCharacters(string str)
     {
-        return Regex.Replace(str, "[^a-zA-Z0-9_.]+", "", RegexOptions.Compiled);
+        return Regex.Replace(str, "[^a-zA-Z]+", "", RegexOptions.Compiled);
     }
-    Boolean woordenboekCheck(string password)
+
+
+    public bool CheckForSimilaritiesUserNameAndPassword(string username, string password)
     {
 
+        return username == password;
+    }
+
+    public bool CheckForTop10WachtwoordenLijst(string password)
+    {
+        string[] top10 = System.IO.File.ReadAllLines("Top10MeestGebruikteWachtwoorden.txt");
+        return top10.Contains(RemoveSpecialCharacters(password).ToLower());
+    }
+    public bool CheckForRepeatingCharacters(string password)
+    {
+        string pattern = @"(.+)\1+";
+        return Regex.IsMatch(password, pattern);
+    }
+
+    public Boolean woordenboekCheck(string password)
+    {
         string[] woordenlijst = System.IO.File.ReadAllLines("Woordenlijst.txt");
-        return woordenlijst.Contains(password);
+        Console.WriteLine(RemoveSpecialCharacters(password));
+        return woordenlijst.Contains(RemoveSpecialCharacters(password).ToLower());
     }
 
 }
