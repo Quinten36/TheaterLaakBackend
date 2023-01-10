@@ -31,7 +31,7 @@ namespace TheaterLaakBackend.Controllers
             if (existingAccount != null)
             {
                 //statuscode 409
-                return Conflict();
+                return StatusCode(409);
             }
 
             //voeg nieuwe gebruiker toe aan de database
@@ -40,4 +40,7 @@ namespace TheaterLaakBackend.Controllers
             return Ok();
         }
     }
+
+
+    // string [] woordenlijst = System.IO.File.ReadAllLines("Woordenlijst.txt");    
 }

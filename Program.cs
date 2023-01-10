@@ -1,8 +1,5 @@
-using Microsoft.EntityFrameworkCore;
 using TheaterLaakBackend.Controllers;
 using TheaterLaakBackend.Generators;
-using TheaterLaakBackend.Models;
-using Microsoft.Extensions.DependencyInjection;
 var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
