@@ -9,19 +9,18 @@ public class PasswordChecker
 
     public string PasswordCheck(string username, string password)
     {
-        if (CheckForSimilaritiesUserNameAndPassword(username, password))
+        if (CheckForSimilarUserNameAndPassword(username, password))
         {
             return "Het wachtwoord is hetzelfde als de gebruikersnaam verander deze";
         }
-        if (CheckForTop10WachtwoordenLijst(password))
+        if (CheckForTop10WachtwoordenLijst(password) || woordenboekCheck(password))
         {
-            return "Het wachtwoord komt te vaak voor verandere deze.";
+            return "Het wachtwoord komt te vaak voor verander uw wachtwoord en gebruik geen bestaande woorden.";
         }
         if (CheckForRepeatingCharacters(password))
         {
             return "Het wachtwoord heeft een herhalend patroon verander dit naar een veiliger wachtwoord";
         }
-
 
         return "Succes";
     }
@@ -32,7 +31,7 @@ public class PasswordChecker
     }
 
 
-    public bool CheckForSimilaritiesUserNameAndPassword(string username, string password)
+    public bool CheckForSimilarUserNameAndPassword(string username, string password)
     {
 
         return username == password;
@@ -49,11 +48,12 @@ public class PasswordChecker
         return Regex.IsMatch(password, pattern);
     }
 
-    public Boolean woordenboekCheck(string password)
+       public  Boolean woordenboekCheck(string password)
     {
         string[] woordenlijst = System.IO.File.ReadAllLines("Woordenlijst.txt");
-        Console.WriteLine(RemoveSpecialCharacters(password));
-        return woordenlijst.Contains(RemoveSpecialCharacters(password).ToLower());
+            
+        return woordenlijst.Contains(RemoveSpecialCharacters(password.ToLower()));
     }
+
 
 }

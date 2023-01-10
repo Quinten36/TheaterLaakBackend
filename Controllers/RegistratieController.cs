@@ -29,10 +29,7 @@ public async Task<ActionResult<Account>> AddUser([FromBody] Account Account)
         .Where(a => a.Username == Account.Username)
         .FirstOrDefaultAsync();
 
-    if (existingAccount != null)
-    {
-        return Conflict(new { message = "Account bestaad al." });
-    }
+
         PasswordChecker pc = new PasswordChecker();
         var UitslagPasswordCheck = pc.PasswordCheck(Account.Username , Account.Password);
     if( UitslagPasswordCheck != "Succes"){
