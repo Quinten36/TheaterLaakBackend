@@ -25,12 +25,11 @@ namespace TheaterLaakBackend.Controllers
 public async Task<ActionResult<Account>> AddUser([FromBody] Account Account)
 {
     // Check if account already exists
-    var existingAccount = await _context.Accounts
-        .Where(a => a.Username == Account.Username)
-        .FirstOrDefaultAsync();
-
-
-        AccountInformationChecker AIC = new AccountInformationChecker();
+        AccountInformationChecker AIC = new AccountInformationChecker(_context);
+        var UitslagUserNameCheck = AIC.BestaandeGebruikerCheck(Account.Username , Account.Email);
+        if(UitslagUserNameCheck != "Succes"){
+             return BadRequest(new { message = UitslagUserNameCheck });
+        }
         var UitslagPasswordCheck = AIC.PasswordCheck(Account.Username , Account.Password);
     if( UitslagPasswordCheck != "Succes"){
         return BadRequest(new { message = UitslagPasswordCheck });

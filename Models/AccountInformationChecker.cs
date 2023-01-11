@@ -1,12 +1,28 @@
 using System.Text.RegularExpressions;
+using TheaterLaakBackend.Controllers;
+
 namespace TheaterLaakBackend;
 public class AccountInformationChecker
 {
 
+    private readonly TheaterDbContext _context;
 
-    //Kijkt voor patronen in het wachtwoord bijvoorbeeld ABCABC returned true . ABCGFD false
+        public AccountInformationChecker(TheaterDbContext context)
+        {
+            _context = context;
+        }
 
 
+    public string BestaandeGebruikerCheck(string username , string email){
+        if(checkGebruikerAlBestaat(username)){
+            return "De gebruikersnaam bestaat al verandere deze naar een nieuwe.";
+        }
+        if(checkEmailAlBestaat(email)){
+                return "Dit email adres bestaat al verandere deze naar een nieuwe.";
+        }
+
+        return "Succes";
+    }
     public string PasswordCheck(string username, string password)
     {
         if (CheckForSimilarUserNameAndPassword(username, password))
@@ -54,4 +70,15 @@ public class AccountInformationChecker
             
         return woordenlijst.Contains(RemoveSpecialCharacters(password.ToLower()));
     }
+
+   public bool checkGebruikerAlBestaat(string username)
+{
+        return _context.Accounts.Any(u => u.Username == username);
+    }
+
+       public bool checkEmailAlBestaat(string email)
+{
+        return _context.Accounts.Any(u => u.Email == email);
+    }
+
 }
