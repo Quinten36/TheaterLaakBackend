@@ -12,15 +12,16 @@ public class AccountInformationChecker
             _context = context;
         }
 
-
     public string BestaandeGebruikerCheck(string username , string email){
+         if(!checkEmailAdresDomainName(email)){
+            return "Dit is geen geldig email adres.";
+        }
         if(checkGebruikerAlBestaat(username)){
             return "De gebruikersnaam bestaat al verandere deze naar een nieuwe.";
         }
         if(checkEmailAlBestaat(email)){
                 return "Dit email adres bestaat al verandere deze naar een nieuwe.";
         }
-
         return "Succes";
     }
     public string PasswordCheck(string username, string password)
@@ -80,5 +81,11 @@ public class AccountInformationChecker
 {
         return _context.Accounts.Any(u => u.Email == email);
     }
-
+ public bool checkEmailAdresDomainName(string email)
+    {
+        string[] emaildomainGebruiker= email.Split('@');
+        string domain = emaildomainGebruiker[1];
+        string[] domains = System.IO.File.ReadAllLines("validEmailDomainNames.txt");
+        return domains.Contains(domain);
+    }
 }
