@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 namespace TheaterLaakBackend;
-public class PasswordChecker
+public class AccountInformationChecker
 {
 
 
@@ -54,6 +54,4 @@ public class PasswordChecker
             
         return woordenlijst.Contains(RemoveSpecialCharacters(password.ToLower()));
     }
-
-
 }

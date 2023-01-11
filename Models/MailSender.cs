@@ -6,15 +6,15 @@ using MimeKit;
 
 public class VerificiatieMail{
 
-            public void  VerstuurVerificatieMail(string emailAccount)
+            public void MailSender(string emailadres , string text , string subject)
         {
             var mailMessage = new MimeMessage();
             mailMessage.From.Add(new MailboxAddress("Theater Laak", "WubWubTunes@gmail.com"));
-            mailMessage.To.Add(new MailboxAddress("Account",emailAccount));
-            mailMessage.Subject = "Account verificatie";
+            mailMessage.To.Add(new MailboxAddress("Account",emailadres));
+            mailMessage.Subject = subject;
             mailMessage.Body = new TextPart("plain")
             {
-                Text = "Hello"
+                Text = text
             };
 
          using (var smtpClient = new SmtpClient())
@@ -22,7 +22,6 @@ public class VerificiatieMail{
                 smtpClient.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
                 smtpClient.Authenticate("WubWubTunes@gmail.com", "ptbnksiopfeezrvt");
                 smtpClient.Send(mailMessage);
-                Console.WriteLine(mailMessage);
                 smtpClient.Disconnect(true);
             }             
         }

@@ -30,8 +30,8 @@ public async Task<ActionResult<Account>> AddUser([FromBody] Account Account)
         .FirstOrDefaultAsync();
 
 
-        PasswordChecker pc = new PasswordChecker();
-        var UitslagPasswordCheck = pc.PasswordCheck(Account.Username , Account.Password);
+        AccountInformationChecker AIC = new AccountInformationChecker();
+        var UitslagPasswordCheck = AIC.PasswordCheck(Account.Username , Account.Password);
     if( UitslagPasswordCheck != "Succes"){
         return BadRequest(new { message = UitslagPasswordCheck });
     }
@@ -43,3 +43,6 @@ public async Task<ActionResult<Account>> AddUser([FromBody] Account Account)
         }
     }
 }
+
+
+
