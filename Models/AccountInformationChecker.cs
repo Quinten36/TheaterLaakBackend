@@ -7,23 +7,33 @@ public class AccountInformationChecker
 
     private readonly TheaterDbContext _context;
 
-        public AccountInformationChecker(TheaterDbContext context)
-        {
-            _context = context;
-        }
 
-    public string BestaandeGebruikerCheck(string username , string email){
-         if(!checkEmailAdresDomainName(email)){
+    public AccountInformationChecker()
+    {
+
+    }
+    public AccountInformationChecker(TheaterDbContext context)
+    {
+        _context = context;
+    }
+
+    public string BestaandeGebruikerCheck(string username, string email)
+    {
+        if (!checkEmailAdresDomainName(email))
+        {
             return "Dit is geen geldig email adres.";
         }
-        if(checkGebruikerAlBestaat(username)){
+        if (checkGebruikerAlBestaat(username))
+        {
             return "De gebruikersnaam bestaat al verandere deze naar een nieuwe.";
         }
-        if(checkEmailAlBestaat(email)){
-                return "Dit email adres bestaat al verandere deze naar een nieuwe.";
+        if (checkEmailAlBestaat(email))
+        {
+            return "Dit email adres bestaat al verandere deze naar een nieuwe.";
         }
         return "Succes";
     }
+
     public string PasswordCheck(string username, string password)
     {
         if (CheckForSimilarUserNameAndPassword(username, password))
@@ -50,13 +60,12 @@ public class AccountInformationChecker
 
     public bool CheckForSimilarUserNameAndPassword(string username, string password)
     {
-
         return username == password;
     }
 
     public bool CheckForTop10WachtwoordenLijst(string password)
     {
-        string[] top10 = System.IO.File.ReadAllLines("Top10MeestGebruikteWachtwoorden.txt");
+        string[] top10 = System.IO.File.ReadAllLines("Lijsten/Top10MeestGebruikteWachtwoorden.txt");
         return top10.Contains(RemoveSpecialCharacters(password).ToLower());
     }
     public bool CheckForRepeatingCharacters(string password)
@@ -65,27 +74,27 @@ public class AccountInformationChecker
         return Regex.IsMatch(password, pattern);
     }
 
-       public  Boolean woordenboekCheck(string password)
+    public Boolean woordenboekCheck(string password)
     {
-        string[] woordenlijst = System.IO.File.ReadAllLines("Woordenlijst.txt");
-            
+        string[] woordenlijst = System.IO.File.ReadAllLines("Lijsten/Woordenlijst.txt");
+
         return woordenlijst.Contains(RemoveSpecialCharacters(password.ToLower()));
     }
 
-   public bool checkGebruikerAlBestaat(string username)
-{
+    public bool checkGebruikerAlBestaat(string username)
+    {
         return _context.Accounts.Any(u => u.Username == username);
     }
 
-       public bool checkEmailAlBestaat(string email)
-{
+    public bool checkEmailAlBestaat(string email)
+    {
         return _context.Accounts.Any(u => u.Email == email);
     }
- public bool checkEmailAdresDomainName(string email)
+    public bool checkEmailAdresDomainName(string email)
     {
-        string[] emaildomainGebruiker= email.Split('@');
+        string[] emaildomainGebruiker = email.Split('@');
         string domain = emaildomainGebruiker[1];
-        string[] domains = System.IO.File.ReadAllLines("validEmailDomainNames.txt");
+        string[] domains = System.IO.File.ReadAllLines("Lijsten/validEmailDomainNames.txt");
         return domains.Contains(domain);
     }
 }
