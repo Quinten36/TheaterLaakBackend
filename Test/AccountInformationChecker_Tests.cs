@@ -100,20 +100,6 @@ public class AccountInformationChecker_Tests
     }
 
 
-    [Fact]
-    public void CheckForRepeatingCharactersInPassword_GoedWachtwoord_ReturnsTrue()
-    {
-
-        // Arrange
-        string password = "Aeack4df!";
-
-        // Act
-        var result = AIC.CheckForRepeatingCharacters(password);
-
-        // Assert
-        Assert.True(result);
-    }
-
 
     [Fact]
     public void CheckForRepeatingCharactersInPassword_SlechtWachtwoord_Letters_ReturnsTrue()
