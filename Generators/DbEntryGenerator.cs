@@ -133,7 +133,9 @@ public class DbEntryGenerator
                 Image = _faker.Image.PicsumUrl(),
                 BeginExclusiveSale = beginExlusiveSale,
                 BeginSale = beginExlusiveSale.AddDays(14),
-                GroupId = _faker.Random.Int(1, groups.Count())
+                GroupId = _faker.Random.Int(1, groups.Count()),
+                BeginDate = beginExlusiveSale.AddDays(21),
+                EndDate = beginExlusiveSale.AddDays(21 + _faker.Random.Int(1, 30))
             };
             
             _context.Programs.Add(program);
