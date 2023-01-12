@@ -192,39 +192,30 @@ public class AccountInformationChecker_Tests
     [Fact]
     public void CheckForSimilarUserNameAndPassword_NaamEnWachtwoordGelijk_ReturnsTrue()
     {
-
         // Arrange
         string password = "testgebruiker";
         string username = "testgebruiker";
         // Act
         var result = AIC.CheckForSimilarUserNameAndPassword(username, password);
-
         // Assert
         Assert.True(result);
-
-
     }
 
     [Fact]
     public void CheckForSimilarUserNameAndPassword_NaamEnWachtwoordNIET_GELIJK_ReturnsFalse()
     {
-
         // Arrange
         string password = "Aeack4df!";
         string username = "testgebruiker";
         // Act
         var result = AIC.CheckForSimilarUserNameAndPassword(username, password);
-
         // Assert
         Assert.False(result);
-
-
     }
 
      [Fact]
     public void RemoveSpecialCharacters_WoordMetSpecialeKarakters_ReturnsStringzonder_SpecialeKarakters_EN_CIJFers()
     {
-
         // Arrange
         string woordMetSpecialeKarakters = "(*)&b!@#@#$(o12312ek";
         string expectedResult = "boek";
@@ -233,8 +224,6 @@ public class AccountInformationChecker_Tests
 
         // Assert
         Assert.Equal(expectedResult , result );
-
-
     }
 }
 

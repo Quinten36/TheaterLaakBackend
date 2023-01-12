@@ -85,7 +85,6 @@ public class AccountInformationChecker
     {
         return _context.Accounts.Any(u => u.Username == username);
     }
-
     public bool checkEmailAlBestaat(string email)
     {
         return _context.Accounts.Any(u => u.Email == email);

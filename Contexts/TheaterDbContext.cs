@@ -17,8 +17,9 @@ public class TheaterDbContext : DbContext
     public DbSet<Reservation> Reservations { get; set; }
     public DbSet<Seat> Seats { get; set; }
     public DbSet<Show> Shows { get; set; }
-    public DbSet<Ticket> Tickets { get; set; }
-    
+    public DbSet<Ticket> Tickets { get; set;}
+
+    public DbSet<Veritficatie> Veritficaties{get;set;}
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlite("Data Source=Database.db");
