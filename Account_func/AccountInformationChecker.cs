@@ -36,6 +36,9 @@ public class AccountInformationChecker
 
     public string PasswordCheck(string username, string password)
     {
+        if(!passwordCheckEISEN(password)){
+            return "Het wachtwoord voldoet niet aan de eisen. 1 hoofdletter 1 kleine letter 1 cijfer en 1 speciaalteken !#@$(%)@#$_";
+        }
         if (CheckForSimilarUserNameAndPassword(username, password))
         {
             return "Het wachtwoord is hetzelfde als de gebruikersnaam verander deze";
@@ -51,6 +54,17 @@ public class AccountInformationChecker
 
         return "Succes";
     }
+
+    public bool passwordCheckEISEN(string password)
+{
+    //De eisen zijn min 1 hoofdletter 1 kleine letter 1 speciaal teken en 1 teken tusse nde 8 en 32 tekens
+    string passwordRegex = @"^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{7,32}$";
+    if (Regex.IsMatch(password, passwordRegex))
+    {
+        return false;
+    }
+    return true;
+}
 
     public string RemoveSpecialCharacters(string str)
     {
