@@ -36,3 +36,5 @@ public class TheaterDbContext : DbContext
 }
 
 //TODO: verdeling in Services maken in SQL model
+
+//TODO: Translate to English
