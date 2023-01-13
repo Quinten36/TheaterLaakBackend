@@ -1,4 +1,5 @@
 namespace TheaterLaakBackend.Models;
+using System.ComponentModel.DataAnnotations.Schema;
 
 public class Reservation
 {
@@ -15,7 +16,6 @@ public class Reservation
 
     [NotMapped]
     public int? capacity { get; set; }
-
 }
 
 //TODO: Reservering veranderen naar Reservation in SQL model
