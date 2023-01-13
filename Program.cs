@@ -3,6 +3,8 @@ using TheaterLaakBackend.Controllers;
 using TheaterLaakBackend.Generators;
 using TheaterLaakBackend.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
+
 var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,14 +19,12 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod();
         });
 });
-
-
-
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
-            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-        );
+{
+    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+});
 
 // Add the Contexts
 builder.Services.AddDbContext<TheaterDbContext>();
@@ -32,6 +32,7 @@ builder.Services.AddDbContext<TheaterDbContext>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 
 var app = builder.Build();
 
