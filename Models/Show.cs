@@ -15,6 +15,6 @@ public class Show
     public int ProgramId { get; set; }
     public Program Program { get; set; }
     
-    public int? GroupId { get; set; }
-    public Group? Group { get; set; }
+    public int GroupId { get; set; }
+    public Group Group { get; set; }
 }

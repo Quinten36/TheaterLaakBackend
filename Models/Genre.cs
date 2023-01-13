@@ -6,6 +6,6 @@ public class Genre
     public string Name { get; set; }
 
     public List<Account> Accounts { get; } = new();
-    public List<Program> Programs { get; } = new();
+    public List<Program> Programs { get; set; } = new();
     
 }
