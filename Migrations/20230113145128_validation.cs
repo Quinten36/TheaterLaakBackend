@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TheaterLaakBackend.Migrations
 {
     /// <inheritdoc />
-    public partial class initialmigration : Migration
+    public partial class validation : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -85,7 +85,7 @@ namespace TheaterLaakBackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Veritficaties",
+                name: "Verificaties",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -96,7 +96,7 @@ namespace TheaterLaakBackend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Veritficaties", x => x.Id);
+                    table.PrimaryKey("PK_Verificaties", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -443,7 +443,7 @@ namespace TheaterLaakBackend.Migrations
                 name: "Tickets");
 
             migrationBuilder.DropTable(
-                name: "Veritficaties");
+                name: "Verificaties");
 
             migrationBuilder.DropTable(
                 name: "Artists");

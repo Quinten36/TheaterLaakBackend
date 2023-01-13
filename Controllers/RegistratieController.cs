@@ -53,7 +53,7 @@ namespace TheaterLaakBackend.Controllers
         {
 
 
-            var veritficatie = _context.Veritficaties.FirstOrDefault(v => v.AccountID == AccountID && v.ValidationCode == VeritficatieCodeInvoer);
+            var veritficatie = _context.Verificaties.FirstOrDefault(v => v.AccountID == AccountID && v.ValidationCode == VeritficatieCodeInvoer);
 
             if (veritficatie == null)
             {
