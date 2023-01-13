@@ -37,7 +37,7 @@ namespace TheaterLaakBackend.Controllers
 			return await _context.Reservations.ToListAsync();
 		}
 
-		// GET: api/artist/byBand/:id
+		// GET: api/reservation/filtered/
 		[HttpGet("filtered")]
 		public async Task<ActionResult<IEnumerable<Reservation>>> GetFilteredReservations()
 		{

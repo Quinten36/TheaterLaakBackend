@@ -33,7 +33,7 @@ namespace TheaterLaakBackend.Controllers
 
     // GET: api/Show/limit/5
     [HttpGet("limit/{id}")]
-    public async Task<ActionResult<IEnumerable<Show>>> GetLimitedShows()
+    public async Task<ActionResult<IEnumerable<Show>>> GetLimitedShows(int id)
     {
       if (_context.Shows == null)
       {
@@ -42,7 +42,7 @@ namespace TheaterLaakBackend.Controllers
 
       List<Show> shows = await _context.Shows.ToListAsync();
       //TODO: alleen shows selecteren die na de dag van vandaag plaats vinden. of die populair zijn
-      List<Show> limitedShow = shows.OrderBy(i => i.Start).Take(5).ToList();
+      List<Show> limitedShow = shows.OrderBy(i => i.Start).Take(id).ToList();
 
       return limitedShow;
     }
