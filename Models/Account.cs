@@ -8,8 +8,7 @@ public class Account
     public string Email { get; set; }
     public string? PhoneNumber { get; set; }
     public bool IsDonator { get; set; }
-    public bool IsSubscribed { get; set; }
-    public bool IsValidated { get; set; }
+    public bool IsSubscribed { get; set;}
 
     public List<Order> Orders { get; } = new();
     public List<Genre> Intrests { get; } = new();

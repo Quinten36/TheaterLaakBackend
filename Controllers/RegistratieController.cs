@@ -51,12 +51,16 @@ namespace TheaterLaakBackend.Controllers
         [Route("api/validate/{AccountID}/{VeritficatieCodeInvoer}")]
         public async Task<ActionResult> ValidateUser(int AccountID, int VeritficatieCodeInvoer)
         {
+
+            int id = AccountID;
+            int VC = VeritficatieCodeInvoer;
             var veritficatie = _context.Veritficaties.FirstOrDefault(v => v.AccountID == AccountID && v.VerificatieCode == VeritficatieCodeInvoer);
 
             if (veritficatie == null)
             {
-                return BadRequest(new { message = "Verification Code in correct" });
+                return BadRequest(new { message = "Verification Code incorrect" });
             }
+
             _context.Accounts.FirstOrDefault(v => v.Id == AccountID).isValidated = true;
             await _context.SaveChangesAsync();
 
