@@ -14,3 +14,4 @@ public class Account
     public List<Genre> Intrests { get; } = new();
     public List<Reservation> Reservations { get; } = new();
 }
+//TODO: Fix spelfout Interests

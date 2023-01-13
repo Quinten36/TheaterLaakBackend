@@ -111,3 +111,5 @@ public class AccountInformationChecker
         return domains.Contains(domain);
     }
 }
+
+//TODO: Translate to English

@@ -27,3 +27,5 @@ public class VerificatieCodeGenerator
         MS.sendMail(email , "Uw verificatie code = " + VerificatieCode, "Uw verificatie code = " + VerificatieCode);
     }
 }
+
+//TODO: Translate to English
