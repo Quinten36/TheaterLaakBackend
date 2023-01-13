@@ -14,4 +14,5 @@ public class Account
     public List<Order> Orders { get; } = new();
     public List<Genre> Intrests { get; } = new();
     public List<Reservation> Reservations { get; } = new();
+    public bool isValidated { get; set; }
 }
