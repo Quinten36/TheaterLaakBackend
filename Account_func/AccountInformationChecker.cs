@@ -8,10 +8,7 @@ public class AccountInformationChecker
     private readonly TheaterDbContext _context;
 
 
-    public AccountInformationChecker()
-    {
 
-    }
     public AccountInformationChecker(TheaterDbContext context)
     {
         _context = context;
