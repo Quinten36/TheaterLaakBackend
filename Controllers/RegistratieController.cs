@@ -52,9 +52,8 @@ namespace TheaterLaakBackend.Controllers
         public async Task<ActionResult> ValidateUser(int AccountID, int VeritficatieCodeInvoer)
         {
 
-            int id = AccountID;
-            int VC = VeritficatieCodeInvoer;
-            var veritficatie = _context.Veritficaties.FirstOrDefault(v => v.AccountID == AccountID && v.VerificatieCode == VeritficatieCodeInvoer);
+
+            var veritficatie = _context.Veritficaties.FirstOrDefault(v => v.AccountID == AccountID && v.ValidationCode == VeritficatieCodeInvoer);
 
             if (veritficatie == null)
             {
