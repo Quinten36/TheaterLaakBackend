@@ -7,11 +7,11 @@ public class AccountInformationChecker
 
     private readonly TheaterDbContext _context;
 
-
-    public AccountInformationChecker()
+     public AccountInformationChecker()
     {
 
     }
+
     public AccountInformationChecker(TheaterDbContext context)
     {
         _context = context;
@@ -36,7 +36,7 @@ public class AccountInformationChecker
 
     public string PasswordCheck(string username, string password)
     {
-        if(!passwordCheckEISEN(password)){
+        if(passwordCheckEISEN(password)){
             return "Het wachtwoord voldoet niet aan de eisen. 1 hoofdletter 1 kleine letter 1 cijfer en 1 speciaalteken !#@$(%)@#$_";
         }
         if (CheckForSimilarUserNameAndPassword(username, password))
