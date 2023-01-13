@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TheaterLaakBackend.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class initialmigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,11 +22,25 @@ namespace TheaterLaakBackend.Migrations
                     Email = table.Column<string>(type: "TEXT", nullable: false),
                     PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
                     IsDonator = table.Column<bool>(type: "INTEGER", nullable: false),
-                    IsSubscribed = table.Column<bool>(type: "INTEGER", nullable: false)
+                    IsSubscribed = table.Column<bool>(type: "INTEGER", nullable: false),
+                    isValidated = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Accounts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Artists",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Artists", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -68,6 +82,21 @@ namespace TheaterLaakBackend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Halls", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Veritficaties",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    AccountID = table.Column<int>(type: "INTEGER", nullable: false),
+                    ValidationCode = table.Column<int>(type: "INTEGER", nullable: false),
+                    VerificationCodeSendDate = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Veritficaties", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -115,22 +144,27 @@ namespace TheaterLaakBackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Artists",
+                name: "ArtistGroup",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    GroupId = table.Column<int>(type: "INTEGER", nullable: true)
+                    ArtistsId = table.Column<int>(type: "INTEGER", nullable: false),
+                    GroupsId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Artists", x => x.Id);
+                    table.PrimaryKey("PK_ArtistGroup", x => new { x.ArtistsId, x.GroupsId });
                     table.ForeignKey(
-                        name: "FK_Artists_Groups_GroupId",
-                        column: x => x.GroupId,
+                        name: "FK_ArtistGroup_Artists_ArtistsId",
+                        column: x => x.ArtistsId,
+                        principalTable: "Artists",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ArtistGroup_Groups_GroupsId",
+                        column: x => x.GroupsId,
                         principalTable: "Groups",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -142,8 +176,11 @@ namespace TheaterLaakBackend.Migrations
                     Title = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
                     IsExclusive = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Image = table.Column<string>(type: "TEXT", nullable: false),
                     BeginExclusiveSale = table.Column<DateTime>(type: "TEXT", nullable: false),
                     BeginSale = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    BeginDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     GroupId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -167,7 +204,7 @@ namespace TheaterLaakBackend.Migrations
                     End = table.Column<DateTime>(type: "TEXT", nullable: false),
                     HasPaid = table.Column<bool>(type: "INTEGER", nullable: false),
                     AccountId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Hallid = table.Column<int>(type: "INTEGER", nullable: false)
+                    HallId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -179,8 +216,8 @@ namespace TheaterLaakBackend.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Reservations_Halls_Hallid",
-                        column: x => x.Hallid,
+                        name: "FK_Reservations_Halls_HallId",
+                        column: x => x.HallId,
                         principalTable: "Halls",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -246,7 +283,7 @@ namespace TheaterLaakBackend.Migrations
                     ThirdClassPrice = table.Column<double>(type: "REAL", nullable: true),
                     HallId = table.Column<int>(type: "INTEGER", nullable: false),
                     ProgramId = table.Column<int>(type: "INTEGER", nullable: false),
-                    GroupId = table.Column<int>(type: "INTEGER", nullable: true)
+                    GroupId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -255,7 +292,8 @@ namespace TheaterLaakBackend.Migrations
                         name: "FK_Shows_Groups_GroupId",
                         column: x => x.GroupId,
                         principalTable: "Groups",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Shows_Halls_HallId",
                         column: x => x.HallId,
@@ -279,7 +317,7 @@ namespace TheaterLaakBackend.Migrations
                     SeatId = table.Column<int>(type: "INTEGER", nullable: false),
                     AccountId = table.Column<int>(type: "INTEGER", nullable: false),
                     ShowId = table.Column<int>(type: "INTEGER", nullable: false),
-                    OrderId = table.Column<int>(type: "INTEGER", nullable: true)
+                    OrderId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -294,7 +332,8 @@ namespace TheaterLaakBackend.Migrations
                         name: "FK_Tickets_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Tickets_Seats_SeatId",
                         column: x => x.SeatId,
@@ -315,9 +354,9 @@ namespace TheaterLaakBackend.Migrations
                 column: "IntrestsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Artists_GroupId",
-                table: "Artists",
-                column: "GroupId");
+                name: "IX_ArtistGroup_GroupsId",
+                table: "ArtistGroup",
+                column: "GroupsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GenreProgram_ProgramsId",
@@ -340,9 +379,9 @@ namespace TheaterLaakBackend.Migrations
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservations_Hallid",
+                name: "IX_Reservations_HallId",
                 table: "Reservations",
-                column: "Hallid");
+                column: "HallId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Seats_HallId",
@@ -392,7 +431,7 @@ namespace TheaterLaakBackend.Migrations
                 name: "AccountGenre");
 
             migrationBuilder.DropTable(
-                name: "Artists");
+                name: "ArtistGroup");
 
             migrationBuilder.DropTable(
                 name: "GenreProgram");
@@ -402,6 +441,12 @@ namespace TheaterLaakBackend.Migrations
 
             migrationBuilder.DropTable(
                 name: "Tickets");
+
+            migrationBuilder.DropTable(
+                name: "Veritficaties");
+
+            migrationBuilder.DropTable(
+                name: "Artists");
 
             migrationBuilder.DropTable(
                 name: "Genres");

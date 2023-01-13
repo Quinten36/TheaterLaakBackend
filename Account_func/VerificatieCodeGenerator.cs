@@ -21,7 +21,7 @@ public class VerificatieCodeGenerator
     public async void sendVertificatie(int id, string email)
     {
         int VerificatieCode = getVerificatieCode();
-        await _context.Veritficaties.AddAsync(new Veritficatie { AccountID = id, VerificatieCode = VerificatieCode, DatumTijdVertificatieCodeVerzonden = DateTime.Now });
+        await _context.Veritficaties.AddAsync(new Validation { AccountID = id, ValidationCode = VerificatieCode, VerificationCodeSendDate = DateTime.Now });
         await _context.SaveChangesAsync();
         MailSender MS = new MailSender();
         MS.sendMail(email , "Uw verificatie code = " + VerificatieCode, "Uw verificatie code = " + VerificatieCode);
