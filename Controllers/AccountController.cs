@@ -53,6 +53,29 @@ namespace TheaterLaakBackend.Controllers
             return account;
         }
 
+        // GET: api/Account/name/5
+        [HttpGet("name/{id}")]
+        public async Task<ActionResult<Account>> GetAccountName(int id)
+        {
+          if (_context.Accounts == null)
+          {
+              return NotFound();
+          }
+            var account = await _context.Accounts.FindAsync(id);
+            account.IsDonator = false;
+            account.Password = null;
+            account.Email = null;
+            account.PhoneNumber = null;
+            account.IsSubscribed = false;
+
+            if (account == null)
+            {
+                return NotFound();
+            }
+
+            return account;
+        }
+
         // PUT: api/Account/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

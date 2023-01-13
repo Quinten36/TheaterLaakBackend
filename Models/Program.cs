@@ -9,6 +9,8 @@ public class Program
     public string Image { get; set; }
     public DateTime BeginExclusiveSale { get; set; }
     public DateTime BeginSale { get; set; }
+    public DateTime BeginDate { get; set; }
+    public DateTime EndDate { get; set; }
 
     public List<Genre> Genres { get; } = new();
 
