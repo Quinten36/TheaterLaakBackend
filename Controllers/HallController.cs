@@ -49,6 +49,41 @@ namespace TheaterLaakBackend.Controllers
             return hall;
         }
 
+        // GET: api/hall/filtered
+    [HttpGet("filtered")]
+    public async Task<ActionResult<IEnumerable<Reservation>>> GetFilteredReservations()
+    {
+      if (_context.Reservations == null)
+      {
+        return NotFound();
+      }
+
+      // checked startdate not after end date
+      var startDate = DateTime.ParseExact(HttpContext.Request.Query["start"], "MM-dd-yyyy",System.Globalization.CultureInfo.InvariantCulture);
+      var endDate = DateTime.ParseExact(HttpContext.Request.Query["end"], "MM-dd-yyyy",System.Globalization.CultureInfo.InvariantCulture);
+      var minCap = Int32.Parse(HttpContext.Request.Query["minCap"]);
+      var maxCap = Int32.Parse(HttpContext.Request.Query["maxCap"]);
+
+      //nog cap inbouwen.
+      List<Reservation> reservations = _context.Reservations.Where(r => r.End > startDate && r.Start > endDate).ToList();
+      List<Reservation> toDelete = new List<Reservation>();
+      foreach (Reservation reservation in reservations) 
+      {
+        reservation.capacity = _context.Halls.First(h => h.Id == reservation.HallId).Capacity;
+        if (reservation.capacity < minCap || reservation.capacity > maxCap)
+          toDelete.Add(reservation);
+        // code block to be executed
+      }
+      // List<Reservation> reservations = _context.Reservations.Where(r => r.Start < endDate && r.End > startDate).ToList();
+
+      foreach (Reservation reservation in toDelete) 
+      {
+        reservations.Remove(reservation);
+      }
+
+      return reservations;
+    }
+
         // PUT: api/Hall/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

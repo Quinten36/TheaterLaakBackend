@@ -13,6 +13,9 @@ public class Reservation
     public int HallId { get; set; }
     public Hall Hall { get; set; }
 
+    [NotMapped]
+    public int? capacity { get; set; }
+
 }
 
 //TODO: Reservering veranderen naar Reservation in SQL model
