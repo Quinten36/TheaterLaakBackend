@@ -63,7 +63,11 @@ namespace TheaterLaakBackend.Controllers
           {
               return NotFound();
           }
-          var program = await _context.Programs.FindAsync(id);
+          var program = await _context.Programs.Where(p => p.Id == id)
+            .Include(p => p.Shows)
+            .Include(p => p.Group)
+            .ThenInclude(g => g.Artists)
+            .FirstOrDefaultAsync();
 
           if (program == null)
           {
