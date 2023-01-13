@@ -11,8 +11,8 @@ using TheaterLaakBackend.Controllers;
 namespace TheaterLaakBackend.Migrations
 {
     [DbContext(typeof(TheaterDbContext))]
-    [Migration("20230109130001_drop-groupId-from-artist")]
-    partial class dropgroupIdfromartist
+    [Migration("20230113102513_initial-migration")]
+    partial class initialmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,7 +62,7 @@ namespace TheaterLaakBackend.Migrations
 
                     b.HasIndex("ProgramsId");
 
-                    b.ToTable("GenreProgram");
+                    b.ToTable("GenreProgram", (string)null);
                 });
 
             modelBuilder.Entity("TheaterLaakBackend.Models.Account", b =>
@@ -91,6 +91,9 @@ namespace TheaterLaakBackend.Migrations
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("isValidated")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -188,6 +191,9 @@ namespace TheaterLaakBackend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("BeginDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("BeginExclusiveSale")
                         .HasColumnType("TEXT");
 
@@ -196,6 +202,9 @@ namespace TheaterLaakBackend.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("EndDate")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("GroupId")
@@ -289,7 +298,7 @@ namespace TheaterLaakBackend.Migrations
                     b.Property<double>("FirstClassPrice")
                         .HasColumnType("REAL");
 
-                    b.Property<int?>("GroupId")
+                    b.Property<int>("GroupId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("HallId")
@@ -327,7 +336,7 @@ namespace TheaterLaakBackend.Migrations
                     b.Property<int>("AccountId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("OrderId")
+                    b.Property<int>("OrderId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("SeatId")
@@ -347,6 +356,26 @@ namespace TheaterLaakBackend.Migrations
                     b.HasIndex("ShowId");
 
                     b.ToTable("Tickets");
+                });
+
+            modelBuilder.Entity("Validation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("AccountID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ValidationCode")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("VerificationCodeSendDate")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Veritficaties");
                 });
 
             modelBuilder.Entity("AccountGenre", b =>
@@ -450,7 +479,9 @@ namespace TheaterLaakBackend.Migrations
                 {
                     b.HasOne("TheaterLaakBackend.Models.Group", "Group")
                         .WithMany()
-                        .HasForeignKey("GroupId");
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TheaterLaakBackend.Models.Hall", "Hall")
                         .WithMany("Shows")
@@ -479,9 +510,11 @@ namespace TheaterLaakBackend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TheaterLaakBackend.Models.Order", null)
+                    b.HasOne("TheaterLaakBackend.Models.Order", "Order")
                         .WithMany("Tickets")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TheaterLaakBackend.Models.Seat", "Seat")
                         .WithMany("Tickets")
@@ -496,6 +529,8 @@ namespace TheaterLaakBackend.Migrations
                         .IsRequired();
 
                     b.Navigation("Account");
+
+                    b.Navigation("Order");
 
                     b.Navigation("Seat");
 
