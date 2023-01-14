@@ -11,8 +11,8 @@ using TheaterLaakBackend.Controllers;
 namespace TheaterLaakBackend.Migrations
 {
     [DbContext(typeof(TheaterDbContext))]
-    [Migration("20230113145128_validation")]
-    partial class validation
+    [Migration("20230114115402_1")]
+    partial class _1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
