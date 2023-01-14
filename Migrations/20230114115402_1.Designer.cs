@@ -11,8 +11,8 @@ using TheaterLaakBackend.Controllers;
 namespace TheaterLaakBackend.Migrations
 {
     [DbContext(typeof(TheaterDbContext))]
-    [Migration("20230113102513_initial-migration")]
-    partial class initialmigration
+    [Migration("20230114115402_1")]
+    partial class _1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -375,7 +375,7 @@ namespace TheaterLaakBackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Veritficaties");
+                    b.ToTable("Verificaties");
                 });
 
             modelBuilder.Entity("AccountGenre", b =>
