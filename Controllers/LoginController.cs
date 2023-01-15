@@ -24,7 +24,7 @@ namespace TheaterLaakBackend.Controllers
             var salt = "";
             var hashedPassword = "";
             var account = _context.Accounts
-                 .Where(a => a.Username == username)
+                 .Where(a => a.Username == username || a.Email == username)
                  .Select(a => new { a.Password })
                  .FirstOrDefault();
             
