@@ -29,30 +29,26 @@ namespace TheaterLaakBackend.Controllers
         [HttpPost]
         public async Task<ActionResult<Account>> AddUser([FromBody] Account Account)
         {
-            // Check if account already exists
-            // AccountInformationChecker AIC = new AccountInformationChecker(_context);
-            // var UitslagUserNameCheck = AIC.BestaandeGebruikerCheck(Account.UserName, Account.Email);
-            // if (UitslagUserNameCheck != "Succes")
-            // {
-            //     return BadRequest(new { message = UitslagUserNameCheck });
-            // }
-            // var UitslagPasswordCheck = AIC.PasswordCheck(Account.UserName, Account.Password);
-            // if (UitslagPasswordCheck != "Succes")
-            // {
-            //     return BadRequest(new { message = UitslagPasswordCheck });
-            // }
-            // HashPWs HashPasswordSha256 = new HashPWs();
-            // Account.Password= HashPasswordSha256.Sha256(Account.Password);
-            // // Add the new account to the database
-            // await _context.Accounts.AddAsync(Account);
-            // await _context.SaveChangesAsync();
-
-            // VerificatieCodeGenerator VCG = new VerificatieCodeGenerator(_context);
-            // VCG.sendVertificatie(Account.Id, Account.Email);
-
-            Console.WriteLine(Account.UserName);
+            Check if account already exists
+            AccountInformationChecker AIC = new AccountInformationChecker(_context);
+            var UitslagUserNameCheck = AIC.BestaandeGebruikerCheck(Account.UserName, Account.Email);
+            if (UitslagUserNameCheck != "Succes")
+            {
+                return BadRequest(new { message = UitslagUserNameCheck });
+            }
+            var UitslagPasswordCheck = AIC.PasswordCheck(Account.UserName, Account.Password);
+            if (UitslagPasswordCheck != "Succes")
+            {
+                return BadRequest(new { message = UitslagPasswordCheck });
+            }
+            HashPWs HashPasswordSha256 = new HashPWs();
+            Account.Password= HashPasswordSha256.Sha256(Account.Password);
+            // Add the new account to the database
             var resultaat = await _userManager.CreateAsync(Account, Account.Password);
             await _context.SaveChangesAsync();
+
+            VerificatieCodeGenerator VCG = new VerificatieCodeGenerator(_context);
+            VCG.sendVertificatie(Account.Id, Account.Email);
 
             // return ;
             return !resultaat.Succeeded ? new BadRequestObjectResult(resultaat) : Ok(new { id = Account.Id });

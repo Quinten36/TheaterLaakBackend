@@ -42,32 +42,38 @@ namespace TheaterLaakBackend.Controllers
 
 //TODO: zorg dat je nog steeds met username en emial kan inloggen
         [HttpPost]
-        [Route("check")]
+        // [Route("")]
         public async Task<ActionResult<Account>> LoginUser([FromBody] Account gebruikerLogin)
         {
           HashPWs hashpasswords = new HashPWs();
           var salt = "";
           var hashedPassword = "";
           var account = _context.Accounts
-                .Where(a => a.UserName == gebruikerLogin.UserName || a.Email == gebruikerLogin.Username)
+                .Where(a => a.UserName == gebruikerLogin.UserName || a.Email == gebruikerLogin.UserName)
                 .Select(a => new { a.Password })
                 .FirstOrDefault();
           
           if (account != null)
           {
+            if (account.Password.Contains(':')) {
               var saltPassword = account.Password.Split(':');
+              Console.WriteLine(account.Password);
               salt = saltPassword[1];
               hashedPassword = saltPassword[0];
+            } else {
+              hashedPassword = gebruikerLogin.Password;
+            }
           }   
 
-          if(!(account.Password == hashpasswords.Sha256(password , salt))){
+          if(!(account.Password == hashpasswords.Sha256(gebruikerLogin.Password , salt).Split(':')[0])){
             return Unauthorized(new { message = "Inlog gegevens verkeerd." });
           }
 
           var _user = await _userManager.FindByNameAsync(gebruikerLogin.UserName);
-          if (_user != null)
-              if (await _userManager.CheckPasswordAsync(_user, _user.Password))
-              {
+          Console.WriteLine(_user);
+          if (_user != null) {
+              // if (await _userManager.CheckPasswordAsync(_user, _user.Password))
+              // {
                   var secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("awef98awef978haweof8g7aw789efhh789awef8h9awh89efh89awe98f89uawef9j8aw89hefawef"));
 
                   var signingCredentials = new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
@@ -84,7 +90,8 @@ namespace TheaterLaakBackend.Controllers
                       signingCredentials: signingCredentials
                   );
                   return Ok(new { Token = new JwtSecurityTokenHandler().WriteToken(tokenOptions) });
-              }
+              // }
+            }
 
           return Unauthorized();
         }
