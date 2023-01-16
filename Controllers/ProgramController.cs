@@ -65,6 +65,7 @@ namespace TheaterLaakBackend.Controllers
           }
           var program = await _context.Programs.Where(p => p.Id == id)
             .Include(p => p.Shows)
+            .Include(p => p.Genres)
             .Include(p => p.Group)
             .ThenInclude(g => g.Artists)
             .FirstOrDefaultAsync();
