@@ -42,7 +42,7 @@ namespace TheaterLaakBackend.Controllers
           return await _context.Accounts.ToListAsync();
         }
 
-//TODO: zorg dat je nog steeds met username en emial kan inloggen
+//TODO: zorg dat je nog steeds met username en email kan inloggen
         [HttpPost]
         // [Route("")]
         public async Task<ActionResult<Account>> LoginUser([FromBody] Account gebruikerLogin)
@@ -70,17 +70,20 @@ namespace TheaterLaakBackend.Controllers
             return Unauthorized(new { message = "Inlog gegevens verkeerd." });
           }
 
+          //get username from email
           var username = _context.Accounts.Single(a => a.Email == gebruikerLogin.Email).UserName;
           var _user = await _userManager.FindByNameAsync(username);
+          //if user is found
           if (_user != null) {
             var secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("awef98awef978haweof8g7aw789efhh789awef8h9awh89efh89awe98f89uawef9j8aw89hefawef"));
-
+            //prepare settings for the jwt token
             var signingCredentials = new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
-            var rolesWithUser = await _userManager.GetRolesAsync(_user);
             var claims = new List<Claim> { new Claim(ClaimTypes.Name, _user.UserName), new Claim("Id", _user.Id)};
             var roles = await _userManager.GetRolesAsync(_user);
+            //get all the roles of the user
             foreach (var role in roles)
               claims.Add(new Claim(ClaimTypes.Role, role));
+            //make the jwt token
             var tokenOptions = new JwtSecurityToken
             (
               issuer: "http://localhost:5086",
@@ -90,7 +93,7 @@ namespace TheaterLaakBackend.Controllers
               signingCredentials: signingCredentials
             );
             return Ok(new { Token = new JwtSecurityTokenHandler().WriteToken(tokenOptions) });
-            }
+          }
           return Unauthorized();
         }
     }

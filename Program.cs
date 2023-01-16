@@ -12,11 +12,11 @@ using System.Security.Cryptography;
 using System.Security.Claims;
 using Microsoft.OpenApi.Models;
 
-
 var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
 
+//fix cors settings
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
@@ -33,6 +33,7 @@ builder.Services.AddDbContext<TheaterDbContext>();
 builder.Services.AddIdentity<Account, IdentityRole>()
                         .AddEntityFrameworkStores<TheaterDbContext>()
                         .AddDefaultTokenProviders();
+// set options for specifications for indetity role login
 builder.Services.Configure<IdentityOptions>(options =>
 {
   // Paswoord instellingen
@@ -76,8 +77,6 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 });
 
-
-
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c => { //<-- NOTE 'Add' instead of 'Configure'
@@ -86,14 +85,6 @@ builder.Services.AddSwaggerGen(c => { //<-- NOTE 'Add' instead of 'Configure'
         Version = "v3"
     });
 });
-// builder.Services.AddSwaggerGen(options.AddSecurityDefinition(name: "Bearer", securityScheme: new OpenApiSecurityScheme
-//   {
-//     Name = "Authorization",
-//     Description = "Enter the Bearer Authorization string as following: `Bearer Generated-JWT-Token`",
-//     In = ParameterLocation.Header,
-//     Type = SecuritySchemeType.ApiKey,
-//     Scheme = "Bearer"
-//   }));
 
 var app = builder.Build();
 
@@ -109,11 +100,12 @@ if (app.Environment.IsDevelopment())
 app.UseCors(MyAllowSpecificOrigins);
 app.UseCors();
 
+//make the roles if they dont already exist
 using (var scope = app.Services.CreateScope())
   {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-    var roles = new string[3] {"Gast", "Donateur", "Medewerker", "Admin"};
+    var roles = new string[4] {"Gast", "Donateur", "Medewerker", "Admin"};
     foreach (var role in roles)
     {
       if (!await roleManager.RoleExistsAsync(role))
