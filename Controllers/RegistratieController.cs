@@ -29,7 +29,7 @@ namespace TheaterLaakBackend.Controllers
         [HttpPost]
         public async Task<ActionResult<Account>> AddUser([FromBody] Account Account)
         {
-            Check if account already exists
+            // Check if account already exists
             AccountInformationChecker AIC = new AccountInformationChecker(_context);
             var UitslagUserNameCheck = AIC.BestaandeGebruikerCheck(Account.UserName, Account.Email);
             if (UitslagUserNameCheck != "Succes")
