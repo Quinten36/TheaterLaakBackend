@@ -37,7 +37,8 @@ namespace TheaterLaakBackend.Controllers
             {
                 return BadRequest(new { message = UitslagPasswordCheck });
             }
-
+            HashPWs HashPasswordSha256 = new HashPWs();
+            Account.Password= HashPasswordSha256.Sha256(Account.Password);
             // Add the new account to the database
             await _context.Accounts.AddAsync(Account);
             await _context.SaveChangesAsync();
