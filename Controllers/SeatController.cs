@@ -49,6 +49,23 @@ namespace TheaterLaakBackend.Controllers
       return seat;
     }
 
+    // GET: api/Seat/byHall/5
+    [HttpGet("byHall/{id}")]
+    public async Task<ActionResult<List<Seat>>> GetSeatInHall(int id)
+    {
+      if (_context.Seats == null)
+      {
+        return NotFound();
+      }
+      var seat = _context.Seats.Include("Tickets").Where(s => s.HallId == id).ToList();
+
+      if (seat == null)
+      {
+        return NotFound();
+      }
+      return seat;
+    }
+
     // GET: api/Seat/5
     [HttpGet("{id}")]
     public async Task<ActionResult<Seat>> GetSeat(int id)
