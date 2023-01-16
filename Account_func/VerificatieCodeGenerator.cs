@@ -18,12 +18,15 @@ public class VerificatieCodeGenerator
     }
 
 
-    public async void sendVertificatie(int id, string email)
+    public async void sendVertificatie(string id, string email)
     {
         int VerificatieCode = getVerificatieCode();
+        Console.WriteLine(VerificatieCode);
         await _context.Verificaties.AddAsync(new Validation { AccountID = id, ValidationCode = VerificatieCode, VerificationCodeSendDate = DateTime.Now });
         await _context.SaveChangesAsync();
+        
         MailSender MS = new MailSender();
+        Console.WriteLine(MS);
         MS.sendMail(email , "Uw verificatie code = " + VerificatieCode, "Uw verificatie code = " + VerificatieCode);
     }
 }

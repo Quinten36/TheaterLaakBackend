@@ -44,20 +44,18 @@ namespace TheaterLaakBackend.Controllers
             HashPWs HashPasswordSha256 = new HashPWs();
             Account.Password= HashPasswordSha256.Sha256(Account.Password);
             // Add the new account to the database
-            await _context.Accounts.AddAsync(Account);
+            var resultaat = await _userManager.CreateAsync(Account, Account.Password);
             await _context.SaveChangesAsync();
 
             VerificatieCodeGenerator VCG = new VerificatieCodeGenerator(_context);
             VCG.sendVertificatie(Account.Id, Account.Email);
-
-            var resultaat = await _userManager.CreateAsync(Account, Account.Password);
 
             // return ;
             return !resultaat.Succeeded ? new BadRequestObjectResult(resultaat) : Ok(new { id = Account.Id });
         }
         [HttpPut]
         [Route("api/validate/{AccountID}/{VeritficatieCodeInvoer}")]
-        public async Task<ActionResult> ValidateUser(int AccountID, int VeritficatieCodeInvoer)
+        public async Task<ActionResult> ValidateUser(string AccountID, int VeritficatieCodeInvoer)
         {
 
 

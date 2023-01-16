@@ -33,6 +33,21 @@ builder.Services.AddDbContext<TheaterDbContext>();
 builder.Services.AddIdentity<Account, IdentityRole>()
                         .AddEntityFrameworkStores<TheaterDbContext>()
                         .AddDefaultTokenProviders();
+builder.Services.Configure<IdentityOptions>(options =>
+{
+  // Paswoord instellingen
+  // options.Password.RequireDigit = true;
+  // options.Password.RequireLowercase = true;
+  // options.Password.RequireNonAlphanumeric = true;
+  // options.Password.RequireUppercase = true;
+  // options.Password.RequiredLength = 6;
+  // options.Password.RequiredUniqueChars = 1;
+
+  // Gebruiker instellingen
+  options.User.RequireUniqueEmail = false;
+  options.User.AllowedUserNameCharacters =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"; // here is the issue
+});
 
 //JWT tokens
 builder.Services.AddAuthentication(opt =>
