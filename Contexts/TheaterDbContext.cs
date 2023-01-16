@@ -1,11 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using TheaterLaakBackend.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace TheaterLaakBackend.Controllers;
 
 
 //Dit heb ik gemaakt met de hulp van https://learn.microsoft.com/en-us/ef/
-public class TheaterDbContext : DbContext
+public class TheaterDbContext : IdentityDbContext
 {
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Artist> Artists { get; set; }

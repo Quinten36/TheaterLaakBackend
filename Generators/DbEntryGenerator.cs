@@ -27,7 +27,7 @@ public class DbEntryGenerator
             
             var account = new Account
             {
-                Username = _faker.Name.FullName(),
+                UserName = _faker.Name.FullName(),
                 Password = _faker.Internet.Password(),
                 Email = _faker.Internet.Email(),
                 PhoneNumber = _faker.Phone.PhoneNumber(),

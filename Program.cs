@@ -3,6 +3,14 @@ using TheaterLaakBackend.Generators;
 using TheaterLaakBackend.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Cryptography;
+using System.Security.Claims;
+using Microsoft.OpenApi.Models;
 
 
 var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -19,6 +27,33 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod();
         });
 });
+
+// Add the Contexts
+builder.Services.AddDbContext<TheaterDbContext>();
+builder.Services.AddIdentity<Account, IdentityRole>()
+                        .AddEntityFrameworkStores<TheaterDbContext>()
+                        .AddDefaultTokenProviders();
+
+//JWT tokens
+builder.Services.AddAuthentication(opt =>
+        {
+            opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(opt =>
+            {
+            opt.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = "http://localhost:5086",
+                    ValidAudience = "http://localhost:5086",
+                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("awef98awef978haweof8g7aw789efhh789awef8h9awh89efh89awe98f89uawef9j8aw89hefawef"))
+                };
+            });
+
+
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
@@ -26,13 +61,24 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 });
 
-// Add the Contexts
-builder.Services.AddDbContext<TheaterDbContext>();
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
+builder.Services.AddSwaggerGen(c => { //<-- NOTE 'Add' instead of 'Configure'
+    c.SwaggerDoc("v3", new OpenApiInfo {
+        Title = "GTrackAPI",
+        Version = "v3"
+    });
+});
+// builder.Services.AddSwaggerGen(options.AddSecurityDefinition(name: "Bearer", securityScheme: new OpenApiSecurityScheme
+//   {
+//     Name = "Authorization",
+//     Description = "Enter the Bearer Authorization string as following: `Bearer Generated-JWT-Token`",
+//     In = ParameterLocation.Header,
+//     Type = SecuritySchemeType.ApiKey,
+//     Scheme = "Bearer"
+//   }));
 
 var app = builder.Build();
 
@@ -48,7 +94,22 @@ if (app.Environment.IsDevelopment())
 app.UseCors(MyAllowSpecificOrigins);
 app.UseCors();
 
+using (var scope = app.Services.CreateScope())
+  {
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    var roles = new string[3] {"Gast", "Medewerker", "Admin"};
+    foreach (var role in roles)
+    {
+      if (!await roleManager.RoleExistsAsync(role))
+      {
+          await roleManager.CreateAsync(new IdentityRole(role));
+      }
+    }
+  }
+
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllers();
 
