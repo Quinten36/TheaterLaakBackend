@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 public class Account : IdentityUser
 {
     public string Password { get; set; }
-    public string Email { get; set; }
+    // public string Email { get; set; }
     public string? PhoneNumber { get; set; }
     public bool IsDonator { get; set; }
     public bool IsSubscribed { get; set; }

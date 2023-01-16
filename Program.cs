@@ -44,7 +44,7 @@ builder.Services.Configure<IdentityOptions>(options =>
   // options.Password.RequiredUniqueChars = 1;
 
   // Gebruiker instellingen
-  options.User.RequireUniqueEmail = false;
+  options.User.RequireUniqueEmail = true;
   options.User.AllowedUserNameCharacters =
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"; // here is the issue
 });
@@ -113,7 +113,7 @@ using (var scope = app.Services.CreateScope())
   {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-    var roles = new string[3] {"Gast", "Medewerker", "Admin"};
+    var roles = new string[3] {"Gast", "Donateur", "Medewerker", "Admin"};
     foreach (var role in roles)
     {
       if (!await roleManager.RoleExistsAsync(role))
