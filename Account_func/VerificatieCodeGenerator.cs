@@ -18,7 +18,7 @@ public class VerificatieCodeGenerator
     }
 
 
-    public async void sendVertificatie(int id, string email)
+    public async void sendVertificatie(string id, string email)
     {
         int VerificatieCode = getVerificatieCode();
         await _context.Verificaties.AddAsync(new Validation { AccountID = id, ValidationCode = VerificatieCode, VerificationCodeSendDate = DateTime.Now });
