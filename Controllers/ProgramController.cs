@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TheaterLaakBackend.Models;
@@ -22,13 +17,42 @@ namespace TheaterLaakBackend.Controllers
 
         // GET: api/Program
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TheaterLaakBackend.Models.Program>>> GetPrograms()
+        public async Task<ActionResult<IEnumerable<TheaterLaakBackend.Models.Program>>> GetPrograms(
+            [FromQuery(Name = "title")] string? titleArtistSearch,
+            [FromQuery(Name = "omschrijving")] string? omschrijvingSearch,
+            //TODO: wat moet er gezocht worden op omschrijving?
+            [FromQuery(Name = "startdate")] string? startDateSearch,
+            [FromQuery(Name = "endDate")] string? endDateSearch,
+            [FromQuery(Name = "costs")] string? costsSearch,
+            [FromQuery(Name = "page")] int? page,
+            [FromQuery(Name = "sort")] string? sortField
+            )
         {
-          if (_context.Programs == null)
-          {
-              return NotFound();
-          }
-            return await _context.Programs.ToListAsync();
+
+            var query = _context.Programs
+                .Include(program => program.Genres)
+                .Include(program => program.Group)
+                .ThenInclude(group => group.Artists )
+                .AsQueryable();
+
+            if (titleArtistSearch != null) query = query.Where
+                (program => 
+                    program.Group.Artists.Any(artist => artist.Name.Contains(titleArtistSearch) ||
+                    program.Title.Contains(titleArtistSearch))
+                );
+
+            var a = _context.Programs;
+
+
+            var programs = await query.ToListAsync();
+                // .Include(program => program.Genres)
+                // .Include(program => program.Group).ThenInclude(group => group.Artists )
+                // .ToListAsync();
+            programs.ForEach(program => program.Genres?.ForEach(genre => genre.Programs = new List<Models.Program>()));
+            programs.ForEach(program => program.Group.Artists.ForEach(artist => artist.Groups = new List<Group>()));
+
+            return programs;
+            //TODO: deze functie misschien in een andere call?
         }
 
         // GET: api/Program/5
@@ -39,14 +63,19 @@ namespace TheaterLaakBackend.Controllers
           {
               return NotFound();
           }
-            var program = await _context.Programs.FindAsync(id);
+          var program = await _context.Programs.Where(p => p.Id == id)
+            .Include(p => p.Shows)
+            .Include(p => p.Genres)
+            .Include(p => p.Group)
+            .ThenInclude(g => g.Artists)
+            .FirstOrDefaultAsync();
 
-            if (program == null)
-            {
-                return NotFound();
-            }
+          if (program == null)
+          {
+              return NotFound();
+          }
 
-            return program;
+          return program;
         }
 
         // PUT: api/Program/5
@@ -89,10 +118,10 @@ namespace TheaterLaakBackend.Controllers
           {
               return Problem("Entity set 'TheaterDbContext.Programs'  is null.");
           }
-            _context.Programs.Add(program);
-            await _context.SaveChangesAsync();
+          _context.Programs.Add(program);
+          await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProgram", new { id = program.Id }, program);
+          return CreatedAtAction("GetProgram", new { id = program.Id }, program);
         }
 
         // DELETE: api/Program/5
@@ -119,5 +148,18 @@ namespace TheaterLaakBackend.Controllers
         {
             return (_context.Programs?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+        
+        // SEARCH: api/Program/search
+        [HttpGet("search")]
+        public async Task<ActionResult<IEnumerable<TheaterLaakBackend.Models.Program>>> SearchProgram([FromQuery] string searchTerm)
+        {
+            var filteredPrograms = await _context.Programs.Where(program => program.Title.Contains(searchTerm)).ToListAsync();
+            return filteredPrograms;
+        }
+
+
+
     }
+
+
 }

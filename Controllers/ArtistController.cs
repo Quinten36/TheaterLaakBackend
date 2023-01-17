@@ -52,7 +52,7 @@ namespace TheaterLaakBackend.Controllers
         // GET: api/artist/byBand/:id
         [HttpGet("byBand/{id}")]
         public async Task<ActionResult<List<Artist>>> GetArtistByBand(int id)
-        {
+        { 
             List<Artist> aa = new List<Artist>();
           if (_context.Artists == null)
           {
