@@ -246,6 +246,22 @@ public class AccountInformationChecker_Tests
         // Assert
         Assert.Equal(result , "c0e0b187dfbf68af8f3fadb275d8b84365865977053b82a63d73a649e1ea4a80:BmBZ2Yt32/w9s0uzVpXUKw==");
     }
+
+
+    [Fact]
+    public void test()
+    {
+        // Arrange  
+        var password = "Aeack4df!";
+        HashPWs HashHelper = new HashPWs();
+        
+        // Act              
+        var result = HashHelper.generateNewPassword();
+        
+        // Assert
+        Assert.Equal(result , password);
+    }
+
 }
 
 
