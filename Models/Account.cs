@@ -19,8 +19,7 @@ public class Account : IdentityUser
     public Account() {}
 
     [JsonConstructor]
-    public Account (string userName, string password, string email, string phoneNumber, bool _IsDonator, bool _IsSubscribed) {
-      UserName = userName;
+    public Account (string password, string email, string phoneNumber, bool _IsDonator, bool _IsSubscribed) {
       Password = password;
       Email = email;
       PhoneNumber = phoneNumber;
