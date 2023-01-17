@@ -79,12 +79,15 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c => { //<-- NOTE 'Add' instead of 'Configure'
-    c.SwaggerDoc("v3", new OpenApiInfo {
-        Title = "GTrackAPI",
-        Version = "v3"
-    });
-});
+// builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options => options.AddSecurityDefinition(name: "Bearer", securityScheme: new OpenApiSecurityScheme
+  {
+    Name = "Authorization",
+    Description = "Enter the Bearer Authorization string as following: `Bearer Generated-JWT-Token`",
+    In = ParameterLocation.Header,
+    Type = SecuritySchemeType.ApiKey,
+    Scheme = "Bearer"
+  }));
 
 var app = builder.Build();
 
