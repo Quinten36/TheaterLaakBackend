@@ -19,3 +19,5 @@ public class Reservation
 }
 
 //TODO: Reservering veranderen naar Reservation in SQL model
+//TODO: accountID1 uit db verwijderen
+//TODO: fix foreign key accountId

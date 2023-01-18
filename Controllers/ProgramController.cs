@@ -1,3 +1,4 @@
+using Bogus.DataSets;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TheaterLaakBackend.Models;
@@ -21,38 +22,80 @@ namespace TheaterLaakBackend.Controllers
             [FromQuery(Name = "title")] string? title,
             [FromQuery(Name = "artist")] string? artist,
             [FromQuery(Name = "description")] string? description,
-            [FromQuery(Name = "startdate")] string? startDateSearch,
+            [FromQuery(Name = "startDate")] string? startDateSearch,
             [FromQuery(Name = "endDate")] string? endDateSearch,
-            [FromQuery(Name = "costs")] string? costsSearch,
-            [FromQuery(Name = "page")] int? page,
+            [FromQuery(Name = "costMax")] string? costMaxSearch,
             [FromQuery(Name = "sort")] string? sortField
             )
         {
+            var queryBuilder = _context.Programs.Include(program => program.Group).ThenInclude(group => group.Artists);
+            if (costMaxSearch != null) queryBuilder.Include(program => program.Shows);
+            var query = queryBuilder.AsQueryable();
 
-            var query = _context.Programs
-                .Include(program => program.Genres)
-                .Include(program => program.Group)
-                .ThenInclude(group => group.Artists )
-                .AsQueryable();
+            if (title != null) query = query.Where(program => program.Title.Contains(title));
+            if (artist != null) query = query.Where(program => program.Group.Artists.Any(a => a.Name.Contains(artist)));
+            if (description != null) query = query.Where(program => program.Description.Contains(description));
+            
+            if (startDateSearch != null)
+            {
+                try
+                {
+                    query = query.Where(program => program.BeginDate.Date >= DateTime.Parse(startDateSearch));
+                }
+                catch (FormatException e)
+                {
+                    // Silently ignore date parsing errors since this can only occur when tampering with the frontend
+                    Console.WriteLine("Incorrect start date format");
+                    Console.WriteLine(e);
+                }
+            }
 
-            if (title != null) query = query.Where(program => 
-                    program.Group.Artists.Any(a => a.Name.Contains(artist) ||
-                    program.Title.Contains(title)) ||
-                    program.Description.Contains(description)
-                );
+            if (endDateSearch != null)
+            {
+                try
+                {
+                    query = query.Where(program => program.EndDate.Date <= DateTime.Parse(endDateSearch));
+                }
+                catch (FormatException e)
+                {
+                    // Silently ignore date parsing errors since this can only occur when tampering with the frontend
+                    Console.WriteLine("Incorrect end date format");
+                    Console.WriteLine(e);
+                }
+            }
 
-            var a = _context.Programs;
+            if (costMaxSearch != null) {
+                try
+                {
+                    query = query.Where(program => program.Shows.Any(show =>
+                        show.FirstClassPrice <= Convert.ToDouble(costMaxSearch) ||
+                        show.SecondClassPrice <= Convert.ToDouble(costMaxSearch) ||
+                        show.ThirdClassPrice <= Convert.ToDouble(costMaxSearch)));
+                }
+                catch (FormatException e)
+                {
+                    // Silently ignore date parsing errors since this can only occur when tampering with the frontend
+                    Console.WriteLine("Incorrect max costs format");
+                    Console.WriteLine(e);
+                }
 
+            }
 
+            query = sortField switch
+            {
+                "datum" => query.OrderBy(program => program.BeginDate),
+                "kostenLaagHoog" => query.OrderBy(program => program.Shows.Min(show => show.ThirdClassPrice)),
+                "kostenHoogLaag" => query.OrderBy(program => program.Shows.Max(show => show.FirstClassPrice)),
+                _ => query
+            };
             var programs = await query.ToListAsync();
-                // .Include(program => program.Genres)
-                // .Include(program => program.Group).ThenInclude(group => group.Artists )
-                // .ToListAsync();
-            programs.ForEach(program => program.Genres?.ForEach(genre => genre.Programs = new List<Models.Program>()));
+            
             programs.ForEach(program => program.Group.Artists.ForEach(artist => artist.Groups = new List<Group>()));
 
             return programs;
             //TODO: deze functie misschien in een andere call?
+            //TODO: datum kan niet lager zijn dan vandaag
+            //TODO: characters moeten geescaped worden
         }
 
         // GET: api/Program/5

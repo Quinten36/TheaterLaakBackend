@@ -25,6 +25,7 @@ public class TheaterDbContext : IdentityDbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlite("Data Source=Database.db");
+        optionsBuilder.EnableSensitiveDataLogging();
     }
     
     protected override void OnModelCreating(ModelBuilder builder)

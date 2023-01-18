@@ -30,6 +30,7 @@ builder.Services.AddCors(options =>
 
 // Add the Contexts
 builder.Services.AddDbContext<TheaterDbContext>();
+
 builder.Services.AddIdentity<Account, IdentityRole>()
                         .AddEntityFrameworkStores<TheaterDbContext>()
                         .AddDefaultTokenProviders();
