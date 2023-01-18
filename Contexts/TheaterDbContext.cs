@@ -15,18 +15,18 @@ public class TheaterDbContext : IdentityDbContext
     public DbSet<Group> Groups { get; set; }
     public DbSet<Hall> Halls { get; set; }
     public DbSet<Order> Orders { get; set; }
-    public DbSet<TheaterLaakBackend.Models.Program> Programs{ get; set; }
+    public DbSet<TheaterLaakBackend.Models.Program> Programs { get; set; }
     public DbSet<Reservation> Reservations { get; set; }
     public DbSet<Seat> Seats { get; set; }
     public DbSet<Show> Shows { get; set; }
-    public DbSet<Ticket> Tickets { get; set;}
-
-    public DbSet<Validation> Verificaties{get;set;}
+    public DbSet<Ticket> Tickets { get; set; }
+    public DbSet<Validation> Verificaties { get; set; }
+    public DbSet<FeedbackDonateurs> FeedbackDonateurs { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlite("Data Source=Database.db");
     }
-    
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
