@@ -11,8 +11,8 @@ using TheaterLaakBackend.Controllers;
 namespace TheaterLaakBackend.Migrations
 {
     [DbContext(typeof(TheaterDbContext))]
-    [Migration("20230118105529_donateursfeedback")]
-    partial class donateursfeedback
+    [Migration("20230118195426_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -287,7 +287,6 @@ namespace TheaterLaakBackend.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("AccountId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("feedbackText")
@@ -473,6 +472,27 @@ namespace TheaterLaakBackend.Migrations
                     b.HasIndex("HallId");
 
                     b.ToTable("Seats");
+                });
+
+            modelBuilder.Entity("TheaterLaakBackend.Models.SeatShowStatus", b =>
+                {
+                    b.Property<int>("ShowId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("SeatId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValueSql("'Available'");
+
+                    b.HasKey("ShowId", "SeatId");
+
+                    b.HasIndex("SeatId");
+
+                    b.ToTable("SeatShowStatus");
                 });
 
             modelBuilder.Entity("TheaterLaakBackend.Models.Show", b =>
@@ -735,6 +755,25 @@ namespace TheaterLaakBackend.Migrations
                     b.Navigation("Hall");
                 });
 
+            modelBuilder.Entity("TheaterLaakBackend.Models.SeatShowStatus", b =>
+                {
+                    b.HasOne("TheaterLaakBackend.Models.Seat", "Seat")
+                        .WithMany("SeatShowStatus")
+                        .HasForeignKey("SeatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TheaterLaakBackend.Models.Show", "Show")
+                        .WithMany("SeatShowStatus")
+                        .HasForeignKey("ShowId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Seat");
+
+                    b.Navigation("Show");
+                });
+
             modelBuilder.Entity("TheaterLaakBackend.Models.Show", b =>
                 {
                     b.HasOne("TheaterLaakBackend.Models.Group", "Group")
@@ -821,7 +860,14 @@ namespace TheaterLaakBackend.Migrations
 
             modelBuilder.Entity("TheaterLaakBackend.Models.Seat", b =>
                 {
+                    b.Navigation("SeatShowStatus");
+
                     b.Navigation("Tickets");
+                });
+
+            modelBuilder.Entity("TheaterLaakBackend.Models.Show", b =>
+                {
+                    b.Navigation("SeatShowStatus");
                 });
 
             modelBuilder.Entity("TheaterLaakBackend.Models.Account", b =>

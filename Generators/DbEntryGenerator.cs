@@ -90,12 +90,26 @@ public class DbEntryGenerator
     {
         for (int i = 0; i < 10; i++)
         {
-            
-            var hall  = new Hall
+            var columns = _faker.Random.Int(5, 20);
+            var rows = _faker.Random.Int(4, 20);
+            var hall  = new Hall();
+            for (int row = 1; row < rows; row++)
             {
-                Capacity = _faker.Random.Int(0, 200)
-            };
-            
+                for (int column = 1; column < columns; column++)
+                {
+                    var seat = new Seat
+                        {
+                            Row = row,
+                            SeatNumber = column,
+                            ForDisabled = _faker.Random.Bool(),
+                            SeatClass = _faker.Random.Int(1, 3),
+                            HallId = hall.Id
+                        };
+                    _context.Seats.Add(seat);
+                    hall.Seats.Add(seat);
+                }
+            }
+            hall.Capacity = hall.Seats.Count;
             _context.Halls.Add(hall);
         }
         _context.SaveChanges();
@@ -164,28 +178,6 @@ public class DbEntryGenerator
             _context.Reservations.Add(reservation);
         }
         _context.SaveChanges();
-    }
-    
-    public void SeatGenerator()
-    {
-        for (int i = 0; i < 20; i++)
-        {
-            
-            var halls = _context.Halls;
-            var seat  = new Seat
-            {
-                Row = _faker.Random.Int(1, 20),
-                SeatNumber = _faker.Random.Int(1, 20),
-                ForDisabled = _faker.Random.Bool(),
-                SeatClass = _faker.Random.Int(1, 3),
-                HallId = _faker.Random.Int(1, halls.Count())
-
-            };
-            
-            _context.Seats.Add(seat);
-        }
-        _context.SaveChanges();
-        //TODO: Seats zijn statisch? kunnen niet random zijn. User story met seats aanvullen met realistische seats
     }
     
     public void ShowGenerator()
@@ -317,6 +309,28 @@ public class DbEntryGenerator
         _context.SaveChanges();
     }
 
+    public void SeatShowStatusGenerator()
+    {
+        // var seatShowStatus = _context.SeatShowStatus;
+        var shows = _context.Shows;
+
+        foreach (var show in shows)
+        {
+            show.Hall.Seats.ForEach(seat => {
+                show.Seats.Add(seat);
+                seat.Shows.Add(show);
+            });
+        }
+        _context.SaveChanges();
+
+        var seatShowStatus = _context.SeatShowStatus;
+        foreach (var status in seatShowStatus)
+        {
+            status.Status = _faker.Random.Int(0, 100) < 80 ? "Available" : "Occupied";
+        }
+        _context.SaveChanges();
+    }
+
     public void DatabaseGenerator()
     {
         AccountGenerator();
@@ -327,11 +341,11 @@ public class DbEntryGenerator
         OrderGenerator();
         ProgramGenerator();
         ReservationGenerator();
-        SeatGenerator();
         ShowGenerator();
         TicketGenerator();
         AccountGenrePivotGenerator();
         GenreProgramPivotGenerator();
         ArtistGroupPivotGenerator();
+        SeatShowStatusGenerator();
     }
 }

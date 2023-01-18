@@ -22,6 +22,8 @@ public class TheaterDbContext : IdentityDbContext
     public DbSet<Ticket> Tickets { get; set; }
     public DbSet<Validation> Verificaties { get; set; }
     public DbSet<FeedbackDonateurs> FeedbackDonateurs { get; set; }
+    public DbSet<SeatShowStatus> SeatShowStatus { get; set; }
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlite("Data Source=Database.db");
@@ -35,6 +37,26 @@ public class TheaterDbContext : IdentityDbContext
             HasMany(program => program.Genres).
             WithMany(genre => genre.Programs).
             UsingEntity(pivot => pivot.ToTable("GenreProgram"));
+
+        builder.Entity<Seat>()
+            .HasMany(s => s.Shows)
+            .WithMany(s => s.Seats)
+            .UsingEntity<SeatShowStatus>(
+                j => j
+                    .HasOne(pt => pt.Show)
+                    .WithMany(t => t.SeatShowStatus)
+                    .HasForeignKey(pt => pt.ShowId),
+                j => j
+                    .HasOne(pt => pt.Seat)
+                    .WithMany(t => t.SeatShowStatus)
+                    .HasForeignKey(pt => pt.SeatId),
+                j => 
+                {
+                    j.Property(pt => pt.Status).HasDefaultValueSql("'Available'");
+                    j.HasKey(t => new { t.ShowId, t.SeatId });
+                }
+
+            );
     }
 }
 

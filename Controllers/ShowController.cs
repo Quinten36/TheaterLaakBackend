@@ -65,6 +65,27 @@ namespace TheaterLaakBackend.Controllers
       return show;
     }
 
+    // GET: api/Show/SeatStatus/5
+    [HttpGet("SeatStatus/{id}")]
+    public async Task<ActionResult<Show>> GetShowSeatStatus(int id)
+    {
+      if (_context.SeatShowStatus == null)
+      {
+        return NotFound();
+      }
+      var showSeatStatus = await _context.Shows
+        .Include(s => s.SeatShowStatus)
+        .ThenInclude(s => s.Seat)
+        .FirstAsync(s => s.Id == id);
+
+      if (showSeatStatus == null)
+      {
+        return NotFound();
+      }
+
+      return showSeatStatus;
+    }
+
     // PUT: api/Show/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]

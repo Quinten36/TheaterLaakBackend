@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TheaterLaakBackend.Migrations
 {
     /// <inheritdoc />
-    public partial class donateursfeedback : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -74,7 +74,7 @@ namespace TheaterLaakBackend.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    AccountId = table.Column<string>(type: "TEXT", nullable: false),
+                    AccountId = table.Column<string>(type: "TEXT", nullable: true),
                     feedbackText = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
@@ -454,6 +454,31 @@ namespace TheaterLaakBackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SeatShowStatus",
+                columns: table => new
+                {
+                    SeatId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ShowId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Status = table.Column<string>(type: "TEXT", nullable: false, defaultValueSql: "'Available'")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SeatShowStatus", x => new { x.ShowId, x.SeatId });
+                    table.ForeignKey(
+                        name: "FK_SeatShowStatus_Seats_SeatId",
+                        column: x => x.SeatId,
+                        principalTable: "Seats",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SeatShowStatus_Shows_ShowId",
+                        column: x => x.ShowId,
+                        principalTable: "Shows",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tickets",
                 columns: table => new
                 {
@@ -571,6 +596,11 @@ namespace TheaterLaakBackend.Migrations
                 column: "HallId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SeatShowStatus_SeatId",
+                table: "SeatShowStatus",
+                column: "SeatId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Shows_GroupId",
                 table: "Shows",
                 column: "GroupId");
@@ -638,6 +668,9 @@ namespace TheaterLaakBackend.Migrations
 
             migrationBuilder.DropTable(
                 name: "Reservations");
+
+            migrationBuilder.DropTable(
+                name: "SeatShowStatus");
 
             migrationBuilder.DropTable(
                 name: "Tickets");
