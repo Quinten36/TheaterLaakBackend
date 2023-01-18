@@ -42,7 +42,7 @@ namespace TheaterLaakBackend.Controllers
                 return BadRequest(new { message = UitslagPasswordCheck });
             }
             HashPWs HashPasswordSha256 = new HashPWs();
-            Account.Password= HashPasswordSha256.Sha256(Account.Password);
+            Account.Password = HashPasswordSha256.Sha256(Account.Password);
             //TODO: add role to the user
             // Add the new account to the database
             var resultaat = await _userManager.CreateAsync(Account, Account.Password);
@@ -54,7 +54,7 @@ namespace TheaterLaakBackend.Controllers
             // return ;
             return !resultaat.Succeeded ? new BadRequestObjectResult(resultaat) : Ok(new { id = Account.Id });
         }
-        
+
         [HttpPut]
         [Route("api/validate/{AccountID}/{VeritficatieCodeInvoer}")]
         public async Task<ActionResult> ValidateUser(string AccountID, int VeritficatieCodeInvoer)
@@ -73,7 +73,27 @@ namespace TheaterLaakBackend.Controllers
 
             return Ok();
         }
+
+
+        [HttpGet]
+        [Route("/OpnieuwVerzendenVerificatieMail/{AccountID}")]
+        public async Task<ActionResult> opnieuwVerzendenVerificatieMail(string AccountID)
+        {
+
+            var account = await _userManager.FindByIdAsync(AccountID);
+
+            if (account == null)
+            {
+                return BadRequest("account bestaat niet");
+            }
+
+            VerificatieCodeGenerator VCG = new VerificatieCodeGenerator(_context);
+            VCG.sendVertificatie(account.Id, account.Email);
+
+            return Ok(account.Email);
+        }
     }
+
 }
 
 

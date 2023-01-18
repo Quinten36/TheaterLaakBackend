@@ -21,14 +21,21 @@ public class VerificatieCodeGenerator
     public async void sendVertificatie(string id, string email)
     {
         int VerificatieCode = getVerificatieCode();
-        Console.WriteLine(VerificatieCode);
+
+        var existingValidation = _context.Verificaties.FirstOrDefault((v => v.AccountID == id));
+        if (existingValidation != null)
+        {
+            _context.Verificaties.Remove(existingValidation);
+            await _context.SaveChangesAsync();
+        }
+
         await _context.Verificaties.AddAsync(new Validation { AccountID = id, ValidationCode = VerificatieCode, VerificationCodeSendDate = DateTime.Now });
         await _context.SaveChangesAsync();
-        
+
         MailSender MS = new MailSender();
-        Console.WriteLine(MS);
-        MS.sendMail(email , "Uw verificatie code = " + VerificatieCode, "Uw verificatie code = " + VerificatieCode);
+        MS.sendMail(email, "Uw verificatie code = " + VerificatieCode, "Uw verificatie code = " + VerificatieCode);
     }
+
 }
 
-//TODO: Translate to English
+
