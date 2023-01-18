@@ -97,7 +97,7 @@ public class AccountInformationChecker
 
     public bool checkGebruikerAlBestaat(string username)
     {
-        return _context.Accounts.Any(u => u.Username == username);
+        return _context.Accounts.Any(u => u.UserName == username);
     }
     public bool checkEmailAlBestaat(string email)
     {

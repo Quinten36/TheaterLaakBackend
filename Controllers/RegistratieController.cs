@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MimeKit;
 using TheaterLaakBackend.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace TheaterLaakBackend.Controllers
 {
@@ -16,10 +18,12 @@ namespace TheaterLaakBackend.Controllers
     public class RegistratieController : ControllerBase
     {
         private readonly TheaterDbContext _context;
+        private readonly UserManager<Account> _userManager;
 
-        public RegistratieController(TheaterDbContext context)
+        public RegistratieController(TheaterDbContext context, UserManager<Account> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         [HttpPost]
@@ -27,30 +31,33 @@ namespace TheaterLaakBackend.Controllers
         {
             // Check if account already exists
             AccountInformationChecker AIC = new AccountInformationChecker(_context);
-            var UitslagUserNameCheck = AIC.BestaandeGebruikerCheck(Account.Username, Account.Email);
+            var UitslagUserNameCheck = AIC.BestaandeGebruikerCheck(Account.UserName, Account.Email);
             if (UitslagUserNameCheck != "Succes")
             {
                 return BadRequest(new { message = UitslagUserNameCheck });
             }
-            var UitslagPasswordCheck = AIC.PasswordCheck(Account.Username, Account.Password);
+            var UitslagPasswordCheck = AIC.PasswordCheck(Account.UserName, Account.Password);
             if (UitslagPasswordCheck != "Succes")
             {
                 return BadRequest(new { message = UitslagPasswordCheck });
             }
             HashPWs HashPasswordSha256 = new HashPWs();
-            Account.Password= HashPasswordSha256.Sha256(Account.Password);
+            Account.Password = HashPasswordSha256.Sha256(Account.Password);
+            //TODO: add role to the user
             // Add the new account to the database
-            await _context.Accounts.AddAsync(Account);
+            var resultaat = await _userManager.CreateAsync(Account, Account.Password);
             await _context.SaveChangesAsync();
 
             VerificatieCodeGenerator VCG = new VerificatieCodeGenerator(_context);
             VCG.sendVertificatie(Account.Id, Account.Email);
 
-            return Ok(new { id = Account.Id });
+            // return ;
+            return !resultaat.Succeeded ? new BadRequestObjectResult(resultaat) : Ok(new { id = Account.Id });
         }
+
         [HttpPut]
         [Route("api/validate/{AccountID}/{VeritficatieCodeInvoer}")]
-        public async Task<ActionResult> ValidateUser(int AccountID, int VeritficatieCodeInvoer)
+        public async Task<ActionResult> ValidateUser(string AccountID, int VeritficatieCodeInvoer)
         {
 
 
@@ -66,7 +73,27 @@ namespace TheaterLaakBackend.Controllers
 
             return Ok();
         }
+
+
+        [HttpGet]
+        [Route("/OpnieuwVerzendenVerificatieMail/{AccountID}")]
+        public async Task<ActionResult> opnieuwVerzendenVerificatieMail(string AccountID)
+        {
+
+            var account = await _userManager.FindByIdAsync(AccountID);
+
+            if (account == null)
+            {
+                return BadRequest("account bestaat niet");
+            }
+
+            VerificatieCodeGenerator VCG = new VerificatieCodeGenerator(_context);
+            VCG.sendVertificatie(account.Id, account.Email);
+
+            return Ok(account.Email);
+        }
     }
+
 }
 
 
