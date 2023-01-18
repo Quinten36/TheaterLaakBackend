@@ -18,9 +18,9 @@ namespace TheaterLaakBackend.Controllers
         // GET: api/Program
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TheaterLaakBackend.Models.Program>>> GetPrograms(
-            [FromQuery(Name = "title")] string? titleArtistSearch,
-            [FromQuery(Name = "omschrijving")] string? omschrijvingSearch,
-            //TODO: wat moet er gezocht worden op omschrijving?
+            [FromQuery(Name = "title")] string? title,
+            [FromQuery(Name = "artist")] string? artist,
+            [FromQuery(Name = "description")] string? description,
             [FromQuery(Name = "startdate")] string? startDateSearch,
             [FromQuery(Name = "endDate")] string? endDateSearch,
             [FromQuery(Name = "costs")] string? costsSearch,
@@ -35,10 +35,10 @@ namespace TheaterLaakBackend.Controllers
                 .ThenInclude(group => group.Artists )
                 .AsQueryable();
 
-            if (titleArtistSearch != null) query = query.Where
-                (program => 
-                    program.Group.Artists.Any(artist => artist.Name.Contains(titleArtistSearch) ||
-                    program.Title.Contains(titleArtistSearch))
+            if (title != null) query = query.Where(program => 
+                    program.Group.Artists.Any(a => a.Name.Contains(artist) ||
+                    program.Title.Contains(title)) ||
+                    program.Description.Contains(description)
                 );
 
             var a = _context.Programs;
