@@ -28,10 +28,8 @@ public class HashPWs
     private string GenerateSalt()
     {
         var saltBytes = new byte[16];
-        using (var rng = RandomNumberGenerator.Create())
-        {
-            rng.GetBytes(saltBytes);
-        }
+        var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(saltBytes);
         return Convert.ToBase64String(saltBytes);
     }
 
