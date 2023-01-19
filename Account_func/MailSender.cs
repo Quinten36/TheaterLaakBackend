@@ -2,16 +2,15 @@
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
-using TheaterLaakBackend;
 
 public class MailSender
 {
 
-    public void sendMail(string emailadres, string text, string subject)
+    public bool sendMail(string emailadres, string text, string subject)
     {
         var mailMessage = new MimeMessage();
         mailMessage.From.Add(new MailboxAddress("Theater Laak", "WubWubTunes@gmail.com"));
-        mailMessage.To.Add(new MailboxAddress("Account", "theaterlaak123@gmail.com"));
+        mailMessage.To.Add(new MailboxAddress("Account", "Theaterlaak123@gmail.com"));
 
         mailMessage.Subject = subject;
         mailMessage.Body = new TextPart("plain")
@@ -23,8 +22,17 @@ public class MailSender
         {
             smtpClient.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
             smtpClient.Authenticate("WubWubTunes@gmail.com", "ptbnksiopfeezrvt");
-            smtpClient.Send(mailMessage);
+
+                try{
+                smtpClient.Send(mailMessage);
+                }
+                catch(InvalidOperationException e){
+                    return false;
+                }
+            
+            
             smtpClient.Disconnect(true);
+            return true;
         }
     }
 
