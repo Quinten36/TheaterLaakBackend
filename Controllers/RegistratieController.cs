@@ -34,19 +34,23 @@ namespace TheaterLaakBackend.Controllers
             var UitslagUserNameCheck = AIC.BestaandeGebruikerCheck(Account.UserName, Account.Email);
             if (UitslagUserNameCheck != "Succes")
             {
-                return BadRequest(new { message = UitslagUserNameCheck });
+              return BadRequest(new { message = UitslagUserNameCheck });
             }
             var UitslagPasswordCheck = AIC.PasswordCheck(Account.UserName, Account.Password);
             if (UitslagPasswordCheck != "Succes")
             {
-                return BadRequest(new { message = UitslagPasswordCheck });
+              return BadRequest(new { message = UitslagPasswordCheck });
             }
             HashPWs HashPasswordSha256 = new HashPWs();
-            Account.Password= HashPasswordSha256.Sha256(Account.Password);
-            //TODO: add role to the user
+            Account.Password = HashPasswordSha256.Sha256(Account.Password);
             // Add the new account to the database
             var resultaat = await _userManager.CreateAsync(Account, Account.Password);
             await _context.SaveChangesAsync();
+            
+            var _user = await _userManager.FindByNameAsync(Account.UserName);
+            Console.WriteLine(_user);
+            await _userManager.AddToRoleAsync(_user, "Gast");
+            
 
             VerificatieCodeGenerator VCG = new VerificatieCodeGenerator(_context);
             VCG.sendVertificatie(Account.Id, Account.Email);
@@ -54,7 +58,7 @@ namespace TheaterLaakBackend.Controllers
             // return ;
             return !resultaat.Succeeded ? new BadRequestObjectResult(resultaat) : Ok(new { id = Account.Id });
         }
-        
+
         [HttpPut]
         [Route("api/validate/{AccountID}/{VeritficatieCodeInvoer}")]
         public async Task<ActionResult> ValidateUser(string AccountID, int VeritficatieCodeInvoer)
@@ -73,7 +77,27 @@ namespace TheaterLaakBackend.Controllers
 
             return Ok();
         }
+
+
+        [HttpGet]
+        [Route("/OpnieuwVerzendenVerificatieMail/{AccountID}")]
+        public async Task<ActionResult> opnieuwVerzendenVerificatieMail(string AccountID)
+        {
+
+            var account = await _userManager.FindByIdAsync(AccountID);
+
+            if (account == null)
+            {
+                return BadRequest("account bestaat niet");
+            }
+
+            VerificatieCodeGenerator VCG = new VerificatieCodeGenerator(_context);
+            VCG.sendVertificatie(account.Id, account.Email);
+
+            return Ok(account.Email);
+        }
     }
+
 }
 
 

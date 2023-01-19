@@ -30,6 +30,7 @@ builder.Services.AddCors(options =>
 
 // Add the Contexts
 builder.Services.AddDbContext<TheaterDbContext>();
+
 builder.Services.AddIdentity<Account, IdentityRole>()
                         .AddEntityFrameworkStores<TheaterDbContext>()
                         .AddDefaultTokenProviders();
@@ -43,6 +44,9 @@ builder.Services.Configure<IdentityOptions>(options =>
   // options.Password.RequireUppercase = true;
   // options.Password.RequiredLength = 6;
   // options.Password.RequiredUniqueChars = 1;
+  options.Lockout.AllowedForNewUsers = true;
+  options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(2);
+  options.Lockout.MaxFailedAccessAttempts = 3;
 
   // Gebruiker instellingen
   options.User.RequireUniqueEmail = true;

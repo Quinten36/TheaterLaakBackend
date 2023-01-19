@@ -8,6 +8,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MimeKit;
 using TheaterLaakBackend.Models;
+using System.Text.Json;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Extensions.Primitives;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.OpenApi.Models;
+using System.Text;
+using System.Security.Claims;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace TheaterLaakBackend.Controllers
 {
@@ -16,10 +29,12 @@ namespace TheaterLaakBackend.Controllers
   public class AccountController : ControllerBase
   {
     private readonly TheaterDbContext _context;
+    private readonly UserManager<Account> _userManager;
 
-    public AccountController(TheaterDbContext context)
+    public AccountController(TheaterDbContext context, UserManager<Account> userManager)
     {
       _context = context;
+      _userManager = userManager;
     }
 
     // GET: api/Account
@@ -36,7 +51,7 @@ namespace TheaterLaakBackend.Controllers
 
     // GET: api/Account/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<Account>> GetAccount(int id)
+    public async Task<ActionResult<Account>> GetAccount(string id)
     {
       if (_context.Accounts == null)
       {
@@ -50,6 +65,70 @@ namespace TheaterLaakBackend.Controllers
       }
 
       return account;
+    }
+
+    // GET: api/Account/5
+    [HttpGet("checkDonatie/{totaal}")]
+    public async Task<ActionResult<String>> GetCheckDonateur(int totaal)
+    {
+      if (_context.Accounts == null)
+      {
+        return NotFound();
+      }
+
+      Console.WriteLine(totaal);
+      //get user from jwt token
+      // string token = HttpContext.Request.Query["Authorization"];
+      Request.Headers.TryGetValue("Authorization", out StringValues token);
+      var JWT = token.ToString().Split(' ')[1];
+
+      var tokenR = new JwtSecurityToken(JWT);
+      string email = tokenR.Claims.First(c => c.Type == "Email").Value;
+      // Console.WriteLine(email);
+      var Username = _context.Accounts.FirstOrDefault(a => a.Email == email).UserName;
+      Console.WriteLine(Username);
+      var _user = await _userManager.FindByNameAsync(Username);
+      // Console.WriteLine(_user);
+
+      if (totaal > 1000) {
+        //do role give thing
+        // Console.WriteLine("almost donateur");
+        if (!await _userManager.IsInRoleAsync(_user, "Donateur")) {
+          // Console.WriteLine("donateur");
+          await _userManager.AddToRoleAsync(_user, "Donateur");
+        }
+      } else {
+        //revoke donateur role
+        if (await _userManager.IsInRoleAsync(_user, "Donateur")) {
+          Console.WriteLine("Heeft role, maar moet weg");
+          Console.WriteLine(await _userManager.IsInRoleAsync(_user, "Donateur"));
+          var output = await _userManager.RemoveFromRoleAsync(_user, "Donateur");
+          Console.WriteLine(output);
+          Console.WriteLine(await _userManager.IsInRoleAsync(_user, "Donateur"));
+        }
+        // return "{\"message\": \"Niet genoeg gedoneerd\"}";
+      }
+
+      var secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("awef98awef978haweof8g7aw789efhh789awef8h9awh89efh89awe98f89uawef9j8aw89hefawef"));
+      //prepare settings for the jwt token
+      var signingCredentials = new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
+      var claims = new List<Claim> { new Claim(ClaimTypes.Name, _user.UserName), new Claim("Id", _user.Id)};
+      var roles = await _userManager.GetRolesAsync(_user);
+      //get all the roles of the user
+      foreach (var role in roles)
+        claims.Add(new Claim(ClaimTypes.Role, role));
+      //make the jwt token
+      var tokenOptions = new JwtSecurityToken
+      (
+        issuer: "http://localhost:5086",
+        audience: "http://localhost:5086",
+        claims: claims,
+        expires: DateTime.Now.AddMinutes(120),
+        signingCredentials: signingCredentials
+      );
+      return Ok(new { Token = new JwtSecurityTokenHandler().WriteToken(tokenOptions) });
+
+      // return "{\"message\": \"U bent nu een geregisteerde donateur \"}";
     }
 
     // GET: api/Account/name/5

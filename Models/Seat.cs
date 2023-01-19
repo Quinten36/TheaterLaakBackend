@@ -12,4 +12,6 @@ public class Seat
     public Hall Hall { get; set; }
 
     public List<Ticket> Tickets { get; } = new();
+    public List<Show> Shows { get; set; } = new();
+    public List<SeatShowStatus> SeatShowStatus { get; set; } = new();
 }
