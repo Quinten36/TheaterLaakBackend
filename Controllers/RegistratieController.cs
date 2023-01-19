@@ -34,12 +34,12 @@ namespace TheaterLaakBackend.Controllers
             var UitslagUserNameCheck = AIC.BestaandeGebruikerCheck(Account.UserName, Account.Email);
             if (UitslagUserNameCheck != "Succes")
             {
-                return BadRequest(new { message = UitslagUserNameCheck });
+              return BadRequest(new { message = UitslagUserNameCheck });
             }
             var UitslagPasswordCheck = AIC.PasswordCheck(Account.UserName, Account.Password);
             if (UitslagPasswordCheck != "Succes")
             {
-                return BadRequest(new { message = UitslagPasswordCheck });
+              return BadRequest(new { message = UitslagPasswordCheck });
             }
             HashPWs HashPasswordSha256 = new HashPWs();
             Account.Password = HashPasswordSha256.Sha256(Account.Password);
