@@ -43,10 +43,14 @@ namespace TheaterLaakBackend.Controllers
             }
             HashPWs HashPasswordSha256 = new HashPWs();
             Account.Password = HashPasswordSha256.Sha256(Account.Password);
-            //TODO: add role to the user
             // Add the new account to the database
             var resultaat = await _userManager.CreateAsync(Account, Account.Password);
             await _context.SaveChangesAsync();
+            
+            var _user = await _userManager.FindByNameAsync(Account.UserName);
+            Console.WriteLine(_user);
+            await _userManager.AddToRoleAsync(_user, "Gast");
+            
 
             VerificatieCodeGenerator VCG = new VerificatieCodeGenerator(_context);
             VCG.sendVertificatie(Account.Id, Account.Email);
