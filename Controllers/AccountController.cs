@@ -84,22 +84,27 @@ namespace TheaterLaakBackend.Controllers
 
       var tokenR = new JwtSecurityToken(JWT);
       string email = tokenR.Claims.First(c => c.Type == "Email").Value;
-      Console.WriteLine(email);
+      // Console.WriteLine(email);
       var Username = _context.Accounts.FirstOrDefault(a => a.Email == email).UserName;
       Console.WriteLine(Username);
       var _user = await _userManager.FindByNameAsync(Username);
+      // Console.WriteLine(_user);
 
       if (totaal > 1000) {
         //do role give thing
-        Console.WriteLine("almost donateur");
+        // Console.WriteLine("almost donateur");
         if (!await _userManager.IsInRoleAsync(_user, "Donateur")) {
-          Console.WriteLine("donateur");
+          // Console.WriteLine("donateur");
           await _userManager.AddToRoleAsync(_user, "Donateur");
         }
       } else {
         //revoke donateur role
         if (await _userManager.IsInRoleAsync(_user, "Donateur")) {
-          await _userManager.RemoveFromRoleAsync(_user, "Donateur");
+          Console.WriteLine("Heeft role, maar moet weg");
+          Console.WriteLine(await _userManager.IsInRoleAsync(_user, "Donateur"));
+          var output = await _userManager.RemoveFromRoleAsync(_user, "Donateur");
+          Console.WriteLine(output);
+          Console.WriteLine(await _userManager.IsInRoleAsync(_user, "Donateur"));
         }
         // return "{\"message\": \"Niet genoeg gedoneerd\"}";
       }
