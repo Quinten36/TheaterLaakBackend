@@ -112,7 +112,7 @@ using (var scope = app.Services.CreateScope())
   {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-    var roles = new string[4] {"Gast", "Donateur", "Medewerker", "Admin"};
+    var roles = new string[5] {"Gast", "Srtist", "Donateur", "Medewerker", "Admin"};
     foreach (var role in roles)
     {
       if (!await roleManager.RoleExistsAsync(role))
