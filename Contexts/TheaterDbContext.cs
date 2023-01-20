@@ -42,7 +42,8 @@ public abstract class TheaterDbContext : IdentityDbContext
                 j => j
                     .HasOne(pt => pt.Show)
                     .WithMany(t => t.SeatShowStatus)
-                    .HasForeignKey(pt => pt.ShowId),
+                    .HasForeignKey(pt => pt.ShowId)
+                    .OnDelete(DeleteBehavior.NoAction),
                 j => j
                     .HasOne(pt => pt.Seat)
                     .WithMany(t => t.SeatShowStatus)
