@@ -4,14 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TheaterLaakBackend.Controllers;
+using TheaterLaakBackend.Contexts;
 
 #nullable disable
 
-namespace TheaterLaakBackend.Migrations
+namespace TheaterLaakBackend.Migrations.SqlLite
 {
-    [DbContext(typeof(TheaterDbContext))]
-    [Migration("20230118195426_InitialMigration")]
+    [DbContext(typeof(SqlLiteTheaterDbContext))]
+    [Migration("20230120184619_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />

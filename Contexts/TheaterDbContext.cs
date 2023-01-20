@@ -1,13 +1,11 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TheaterLaakBackend.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 
-namespace TheaterLaakBackend.Controllers;
-
+namespace TheaterLaakBackend.Contexts;
 
 //Dit heb ik gemaakt met de hulp van https://learn.microsoft.com/en-us/ef/
-public class TheaterDbContext : IdentityDbContext
+public abstract class TheaterDbContext : IdentityDbContext
 {
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Artist> Artists { get; set; }
@@ -23,12 +21,6 @@ public class TheaterDbContext : IdentityDbContext
     public DbSet<Validation> Verificaties { get; set; }
     public DbSet<FeedbackDonateurs> FeedbackDonateurs { get; set; }
     public DbSet<SeatShowStatus> SeatShowStatus { get; set; }
-    
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseSqlite("Data Source=Database.db");
-        optionsBuilder.EnableSensitiveDataLogging();
-    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -61,5 +53,3 @@ public class TheaterDbContext : IdentityDbContext
 }
 
 //TODO: verdeling in Services maken in SQL model
-
-//TODO: Translate to English

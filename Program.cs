@@ -1,16 +1,12 @@
-using TheaterLaakBackend.Controllers;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
+using TheaterLaakBackend.Contexts;
 using TheaterLaakBackend.Generators;
 using TheaterLaakBackend.Models;
-using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Cryptography;
-using System.Security.Claims;
-using Microsoft.OpenApi.Models;
 
 var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -29,7 +25,14 @@ builder.Services.AddCors(options =>
 });
 
 // Add the Contexts
-builder.Services.AddDbContext<TheaterDbContext>();
+if (Environment.GetEnvironmentVariable("SQLAZURECONNSTR_defaultConnection") != null)
+{
+    builder.Services.AddDbContext<TheaterDbContext, SqlServerTheaterDbContext>();
+}
+else
+{
+    builder.Services.AddDbContext<TheaterDbContext, SqlLiteTheaterDbContext>();
+}
 
 builder.Services.AddIdentity<Account, IdentityRole>()
                         .AddEntityFrameworkStores<TheaterDbContext>()
@@ -61,7 +64,7 @@ builder.Services.AddAuthentication(opt =>
             opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer(opt =>
             {
-            opt.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+            opt.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
@@ -69,7 +72,7 @@ builder.Services.AddAuthentication(opt =>
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = "http://localhost:5086",
                     ValidAudience = "http://localhost:5086",
-                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("awef98awef978haweof8g7aw789efhh789awef8h9awh89efh89awe98f89uawef9j8aw89hefawef"))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("awef98awef978haweof8g7aw789efhh789awef8h9awh89efh89awe98f89uawef9j8aw89hefawef"))
                 };
             });
 
@@ -100,6 +103,13 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    using var scope = app.Services.CreateScope();
+    var context = scope.ServiceProvider.GetRequiredService<TheaterDbContext>();
+    if (!context.Accounts.Any())
+    {
+        new DbEntryGenerator(context).DatabaseGenerator();  
+    }
 }
 
 // app.UseHttpsRedirection();
@@ -109,30 +119,23 @@ app.UseCors();
 
 //make the roles if they dont already exist
 using (var scope = app.Services.CreateScope())
-  {
+{
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
     var roles = new string[5] {"Gast", "Srtist", "Donateur", "Medewerker", "Admin"};
     foreach (var role in roles)
     {
-      if (!await roleManager.RoleExistsAsync(role))
-      {
-          await roleManager.CreateAsync(new IdentityRole(role));
-      }
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
     }
-  }
+}
 
 app.UseAuthorization();
 app.UseAuthentication();
 
 app.MapControllers();
-
-var context = new TheaterDbContext();
-if (!context.Accounts.Any())
-{
-    var dbEntryGenerator = new DbEntryGenerator(new TheaterDbContext());
-    dbEntryGenerator.DatabaseGenerator();  
-}
 
 app.Run();
 

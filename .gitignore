@@ -7,7 +7,8 @@ appsettings.json
 nuget.config
 appsettings.development.json
 Folder.DotSettings.user
-Migrations/TheaterDbContextModelSnapshot.cs
+Migrations/SqlLite/SqlLiteTheaterDbContextModelSnapshot.cs
+Migrations/SqlServer/SqlServerTheaterDbContextModelSnapshot.cs
 
 # Ignore IDE presets
 .vs/
