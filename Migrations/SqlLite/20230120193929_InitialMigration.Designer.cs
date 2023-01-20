@@ -11,8 +11,8 @@ using TheaterLaakBackend.Contexts;
 namespace TheaterLaakBackend.Migrations.SqlLite
 {
     [DbContext(typeof(SqlLiteTheaterDbContext))]
-    [Migration("20230120193230_ChangeCascadeRules")]
-    partial class ChangeCascadeRules
+    [Migration("20230120193929_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -449,8 +449,7 @@ namespace TheaterLaakBackend.Migrations.SqlServer
                         name: "FK_Shows_Programs_ProgramId",
                         column: x => x.ProgramId,
                         principalTable: "Programs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(

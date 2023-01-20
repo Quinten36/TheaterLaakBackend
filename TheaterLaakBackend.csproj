@@ -41,6 +41,8 @@
 
   <ItemGroup>
     <Folder Include="Migrations" />
+    <Folder Include="Migrations\SqlLite" />
+    <Folder Include="Migrations\SqlServer" />
   </ItemGroup>
 
 </Project>
