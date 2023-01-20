@@ -46,7 +46,7 @@ namespace TheaterLaakBackend.Controllers
         return NotFound();
       }
       return await _context.Accounts.ToListAsync();
-    }    
+    }   
 
 
     // GET: api/Account/5
