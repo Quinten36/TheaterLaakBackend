@@ -51,7 +51,7 @@ namespace TheaterLaakBackend.Controllers
 
     // GET: api/Account/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<Account>> GetAccount(int id)
+    public async Task<ActionResult<Account>> GetAccount(string id)
     {
       if (_context.Accounts == null)
       {
