@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TheaterLaakBackend.Contexts;
 using TheaterLaakBackend.Models;
 
 namespace TheaterLaakBackend.Controllers
@@ -24,10 +25,10 @@ namespace TheaterLaakBackend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Ticket>>> GetTickets()
         {
-          if (_context.Tickets == null)
-          {
-              return NotFound();
-          }
+            if (_context.Tickets == null)
+            {
+                return NotFound();
+            }
             return await _context.Tickets.ToListAsync();
         }
 
@@ -35,10 +36,10 @@ namespace TheaterLaakBackend.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Ticket>> GetTicket(int id)
         {
-          if (_context.Tickets == null)
-          {
-              return NotFound();
-          }
+            if (_context.Tickets == null)
+            {
+                return NotFound();
+            }
             var ticket = await _context.Tickets.FindAsync(id);
 
             if (ticket == null)
@@ -85,10 +86,10 @@ namespace TheaterLaakBackend.Controllers
         [HttpPost]
         public async Task<ActionResult<Ticket>> PostTicket(Ticket ticket)
         {
-          if (_context.Tickets == null)
-          {
-              return Problem("Entity set 'TheaterDbContext.Tickets'  is null.");
-          }
+            if (_context.Tickets == null)
+            {
+                return Problem("Entity set 'TheaterDbContext.Tickets'  is null.");
+            }
             _context.Tickets.Add(ticket);
             await _context.SaveChangesAsync();
 
@@ -113,6 +114,20 @@ namespace TheaterLaakBackend.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+        [HttpGet]
+        [Route("/getReservationsByID/{id}/")]
+        public async Task<IActionResult> getTicketById(string id)
+        {
+            var ticketsBijPersoon = _context.Tickets
+                .Include(t => t.Seat)
+                .Include(t => t.Show.Program)
+                .Where(r => r.AccountId.ToString() == id);
+            if (ticketsBijPersoon == null)
+            {
+                return BadRequest();
+            }
+            return Ok(ticketsBijPersoon);
         }
 
         private bool TicketExists(int id)
