@@ -220,6 +220,8 @@ namespace TheaterLaakBackend.Controllers
       return NoContent();
     }
 
+ 
+
     private bool AccountExists(string id)
     {
       return (_context.Accounts?.Any(e => e.Id == id)).GetValueOrDefault();
