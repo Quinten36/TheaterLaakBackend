@@ -30,7 +30,12 @@ public abstract class TheaterDbContext : IdentityDbContext
             WithMany(genre => genre.Programs).
             UsingEntity(pivot => pivot.ToTable("GenreProgram"));
 
-        builder.Entity<Seat>()
+        builder.Entity<Models.Program>()
+            .HasMany(it => it.Shows)
+            .WithOne(it => it.Program)
+            .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Seat>()
             .HasMany(s => s.Shows)
             .WithMany(s => s.Seats)
             .UsingEntity<SeatShowStatus>(
@@ -49,6 +54,7 @@ public abstract class TheaterDbContext : IdentityDbContext
                 }
 
             );
+        
     }
 }
 
