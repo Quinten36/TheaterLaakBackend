@@ -34,6 +34,12 @@ public abstract class TheaterDbContext : IdentityDbContext
             .HasMany(it => it.Shows)
             .WithOne(it => it.Program)
             .OnDelete(DeleteBehavior.NoAction);
+        
+        
+        builder.Entity<Models.Show>()
+            .HasMany(it => it.Tickets)
+            .WithOne(it => it.Show)
+            .OnDelete(DeleteBehavior.NoAction);
 
             builder.Entity<Seat>()
             .HasMany(s => s.Shows)

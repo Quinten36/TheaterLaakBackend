@@ -12,7 +12,7 @@ using TheaterLaakBackend.Contexts;
 namespace TheaterLaakBackend.Migrations.SqlServer
 {
     [DbContext(typeof(SqlServerTheaterDbContext))]
-    [Migration("20230120194445_InitialMigration")]
+    [Migration("20230120195410_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -855,9 +855,9 @@ namespace TheaterLaakBackend.Migrations.SqlServer
                         .IsRequired();
 
                     b.HasOne("TheaterLaakBackend.Models.Show", "Show")
-                        .WithMany()
+                        .WithMany("Tickets")
                         .HasForeignKey("ShowId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Account");
@@ -903,6 +903,8 @@ namespace TheaterLaakBackend.Migrations.SqlServer
             modelBuilder.Entity("TheaterLaakBackend.Models.Show", b =>
                 {
                     b.Navigation("SeatShowStatus");
+
+                    b.Navigation("Tickets");
                 });
 
             modelBuilder.Entity("TheaterLaakBackend.Models.Account", b =>

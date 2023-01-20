@@ -19,5 +19,6 @@ public class Show
     public Group Group { get; set; }
 
     public List<Seat> Seats { get; set; } = new();
+    public List<Ticket> Tickets { get; set; } = new();
     public List<SeatShowStatus> SeatShowStatus { get; set; } = new();
 }
