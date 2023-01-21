@@ -119,6 +119,25 @@ namespace TheaterLaakBackend.Controllers
             return CreatedAtAction("GetArtist", new { id = artist.Id }, artist);
         }
 
+        // POST: api/Artist/lijst
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("lijst")]
+        public async Task<ActionResult<Artist>> PostArtist(List<Artist> artists)
+        {
+          if (_context.Artists == null)
+          {
+              return Problem("Entity set 'TheaterDbContext.Artists'  is null.");
+          }
+          // do Lookup sruff
+          foreach (var i in artists) {
+            Console.log(i);
+          }
+            _context.Artists.Add(artist);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetArtist", new { id = artist.Id }, artist);
+        }
+
         // DELETE: api/Artist/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteArtist(int id)
