@@ -107,7 +107,7 @@ namespace TheaterLaakBackend.Controllers
         // POST: api/Artist
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Artist>> PostArtist(Artist artist)
+        public async Task<ActionResult> PostArtist(Artist artist)
         {
           if (_context.Artists == null)
           {
@@ -122,7 +122,7 @@ namespace TheaterLaakBackend.Controllers
         // POST: api/Artist/lijst
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("lijst")]
-        public async Task<ActionResult<Artist>> PostArtist(List<Artist> artists)
+        public async Task<ActionResult> PostArtist(string[] artists)
         {
           if (_context.Artists == null)
           {
@@ -130,12 +130,13 @@ namespace TheaterLaakBackend.Controllers
           }
           // do Lookup sruff
           foreach (var i in artists) {
-            Console.log(i);
-          }
+            var artist = new Artist();
+            artist.Name = i;
             _context.Artists.Add(artist);
             await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetArtist", new { id = artist.Id }, artist);
+          }
+            
+          return Ok();
         }
 
         // DELETE: api/Artist/5
