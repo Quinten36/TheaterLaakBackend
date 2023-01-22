@@ -45,8 +45,6 @@ namespace TheaterLaakBackend.Controllers
     [Route("setToken")]
     public ContentResult GetAccounts([FromForm] string token)
     {
-      Console.WriteLine(token);
-      
       var html = "<!DOCTYPE html><html><head></head><body><a href=\"http://localhost:3000/heeftAutherized/"+token+"\">Klik here to proceed</a></body></html>";
       return new ContentResult
       {
@@ -60,8 +58,6 @@ namespace TheaterLaakBackend.Controllers
     [Route("setPayment")]
     public ContentResult GetPayment([FromForm] string account, [FromForm] string succes, [FromForm] string reference)
     {
-      Console.WriteLine(succes);
-
       string outputHTML;
       string redirect;
 

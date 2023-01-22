@@ -48,11 +48,8 @@ namespace TheaterLaakBackend.Controllers
             // Add the new account to the database
             var resultaat = await _userManager.CreateAsync(Account, Account.Password);
             await _context.SaveChangesAsync();
-
-            Console.WriteLine(resultaat);
             
             var _user = await _userManager.FindByNameAsync(Account.UserName);
-            Console.WriteLine(_user);
             await _userManager.AddToRoleAsync(_user, "Gast");
             
 
