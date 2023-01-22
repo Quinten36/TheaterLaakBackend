@@ -22,9 +22,11 @@ using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using TheaterLaakBackend.Contexts;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TheaterLaakBackend.Controllers
 {
+  [Authorize(Roles="Gast")]
   [Route("api/[controller]")]
   [ApiController]
   public class MiscController : ControllerBase
@@ -43,12 +45,6 @@ namespace TheaterLaakBackend.Controllers
     [Route("setToken")]
     public ContentResult GetAccounts([FromForm] string token)
     {
-      // if (_context.Accounts == null)
-      // {
-      //   return NotFound();
-      // }
-      Console.WriteLine(token);
-      
       var html = "<!DOCTYPE html><html><head></head><body><a href=\"http://localhost:3000/heeftAutherized/"+token+"\">Klik here to proceed</a></body></html>";
       return new ContentResult
       {
@@ -62,12 +58,6 @@ namespace TheaterLaakBackend.Controllers
     [Route("setPayment")]
     public ContentResult GetPayment([FromForm] string account, [FromForm] string succes, [FromForm] string reference)
     {
-      // if (_context.Accounts == null)
-      // {
-      //   return NotFound();
-      // }
-      Console.WriteLine(succes);
-
       string outputHTML;
       string redirect;
 

@@ -22,6 +22,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using TheaterLaakBackend.Contexts;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TheaterLaakBackend.Controllers
 {
@@ -39,6 +40,7 @@ namespace TheaterLaakBackend.Controllers
     }
 
     // GET: api/Account
+    [Authorize(Roles="Medewerker")]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Account>>> GetAccounts()
     {
@@ -77,7 +79,6 @@ namespace TheaterLaakBackend.Controllers
         return NotFound();
       }
 
-      Console.WriteLine(totaal);
       //get user from jwt token
       // string token = HttpContext.Request.Query["Authorization"];
       Request.Headers.TryGetValue("Authorization", out StringValues token);
@@ -85,27 +86,18 @@ namespace TheaterLaakBackend.Controllers
 
       var tokenR = new JwtSecurityToken(JWT);
       string email = tokenR.Claims.First(c => c.Type == "Email").Value;
-      // Console.WriteLine(email);
       var Username = _context.Accounts.FirstOrDefault(a => a.Email == email).UserName;
-      Console.WriteLine(Username);
       var _user = await _userManager.FindByNameAsync(Username);
-      // Console.WriteLine(_user);
 
       if (totaal > 1000) {
         //do role give thing
-        // Console.WriteLine("almost donateur");
         if (!await _userManager.IsInRoleAsync(_user, "Donateur")) {
-          // Console.WriteLine("donateur");
           await _userManager.AddToRoleAsync(_user, "Donateur");
         }
       } else {
         //revoke donateur role
         if (await _userManager.IsInRoleAsync(_user, "Donateur")) {
-          Console.WriteLine("Heeft role, maar moet weg");
-          Console.WriteLine(await _userManager.IsInRoleAsync(_user, "Donateur"));
           var output = await _userManager.RemoveFromRoleAsync(_user, "Donateur");
-          Console.WriteLine(output);
-          Console.WriteLine(await _userManager.IsInRoleAsync(_user, "Donateur"));
         }
         // return "{\"message\": \"Niet genoeg gedoneerd\"}";
       }
@@ -186,22 +178,8 @@ namespace TheaterLaakBackend.Controllers
       return NoContent();
     }
 
-    // POST: api/Account
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPost]
-    public async Task<ActionResult<Account>> PostAccount(Account account)
-    {
-      if (_context.Accounts == null)
-      {
-        return Problem("Entity set 'TheaterDbContext.Accounts'  is null.");
-      }
-      _context.Accounts.Add(account);
-      await _context.SaveChangesAsync();
-
-      return CreatedAtAction("GetAccount", new { id = account.Id }, account);
-    }
-
     // DELETE: api/Account/5
+    [Authorize(Roles="Medewerker")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAccount(int id)
     {
@@ -220,8 +198,6 @@ namespace TheaterLaakBackend.Controllers
 
       return NoContent();
     }
-
- 
 
     private bool AccountExists(string id)
     {

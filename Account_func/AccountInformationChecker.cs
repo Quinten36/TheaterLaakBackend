@@ -80,7 +80,7 @@ public class AccountInformationChecker
 
     public bool CheckForTop10WachtwoordenLijst(string password)
     {
-        string[] top10 = System.IO.File.ReadAllLines("Lijsten/Top10MeestGebruikteWachtwoorden.txt");
+        string[] top10 = System.IO.File.ReadAllLines("./Lijsten/Top10MeestGebruikteWachtwoorden.txt");
         return top10.Contains(RemoveSpecialCharacters(password).ToLower());
     }
     public bool CheckForRepeatingCharacters(string password)

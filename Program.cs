@@ -55,7 +55,7 @@ builder.Services.Configure<IdentityOptions>(options =>
   // Gebruiker instellingen
   options.User.RequireUniqueEmail = true;
   options.User.AllowedUserNameCharacters =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"; // here is the issue
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-._@+/ "; // here is the issue
 });
 
 //JWT tokens
@@ -127,7 +127,7 @@ using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-    var roles = new string[5] {"Gast", "Srtist", "Donateur", "Medewerker", "Admin"};
+    var roles = new string[5] {"Gast", "Artist", "Donateur", "Medewerker", "Admin"};
     foreach (var role in roles)
     {
         if (!await roleManager.RoleExistsAsync(role))
@@ -136,9 +136,9 @@ using (var scope = app.Services.CreateScope())
         }
     }
 }
-
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
+
 
 app.MapControllers();
 
