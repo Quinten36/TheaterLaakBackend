@@ -69,13 +69,17 @@ namespace TheaterLaakBackend.Controllers
       Console.WriteLine(succes);
 
       string outputHTML;
+      string redirect;
 
-      if (succes == "true")
+      if (succes == "true"){
         outputHTML = "<p style=\"color:green; font-size: 1.6em;font-weight: 600;\">Betaling gelukt</p>";
-      else
+        redirect = "http://localhost:3000/bestellingAfronden";
+      }
+      else{
         outputHTML = "<p style=\"color:red; font-size: 1.6em;font-weight: 600;\">Betaling is mislukt</p>";
-      
-      var html = "<!DOCTYPE html><html><head></head><body>"+outputHTML+"<a href=\"http://localhost:3000\">Rond de betaling af</a></body></html>";
+        redirect = "http://localhost:3000/winkelwagen";
+      }
+      var html = "<!DOCTYPE html><html><head></head><body>"+outputHTML+"<a href=\""+redirect+"\">Rond de betaling af</a></body></html>";
       return new ContentResult
       {
           Content = html,

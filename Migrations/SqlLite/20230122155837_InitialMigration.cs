@@ -251,7 +251,7 @@ namespace TheaterLaakBackend.Migrations.SqlLite
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     HasPaid = table.Column<bool>(type: "INTEGER", nullable: false),
-                    AccountId = table.Column<int>(type: "INTEGER", nullable: false),
+                    AccountId = table.Column<int>(type: "INTEGER", nullable: true),
                     AccountId1 = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
@@ -483,7 +483,7 @@ namespace TheaterLaakBackend.Migrations.SqlLite
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     SeatId = table.Column<int>(type: "INTEGER", nullable: false),
-                    AccountId = table.Column<int>(type: "INTEGER", nullable: false),
+                    AccountId = table.Column<int>(type: "INTEGER", nullable: true),
                     AccountId1 = table.Column<string>(type: "TEXT", nullable: true),
                     ShowId = table.Column<int>(type: "INTEGER", nullable: false),
                     OrderId = table.Column<int>(type: "INTEGER", nullable: false)
