@@ -26,7 +26,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace TheaterLaakBackend.Controllers
 {
-  [Authorize(Roles="Gast")]
   [Route("api/[controller]")]
   [ApiController]
   public class MiscController : ControllerBase
