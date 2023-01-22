@@ -11,6 +11,7 @@ using TheaterLaakBackend.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TheaterLaakBackend.Contexts;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TheaterLaakBackend.Controllers
 {
@@ -49,7 +50,6 @@ namespace TheaterLaakBackend.Controllers
             await _context.SaveChangesAsync();
             
             var _user = await _userManager.FindByNameAsync(Account.UserName);
-            Console.WriteLine(_user);
             await _userManager.AddToRoleAsync(_user, "Gast");
             
 

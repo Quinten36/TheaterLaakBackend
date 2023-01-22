@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TheaterLaakBackend.Contexts;
 using TheaterLaakBackend.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TheaterLaakBackend.Controllers
 {
@@ -89,6 +90,7 @@ namespace TheaterLaakBackend.Controllers
 
     // PUT: api/Show/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [Authorize(Roles="Medewerker, Admin")]
     [HttpPut("{id}")]
     public async Task<IActionResult> PutShow(int id, Show show)
     {
@@ -120,6 +122,7 @@ namespace TheaterLaakBackend.Controllers
 
     // POST: api/Show
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [Authorize(Roles="Medewerker, Admin")]
     [HttpPost]
     public async Task<ActionResult<Show>> PostShow(Show show)
     {
@@ -134,6 +137,7 @@ namespace TheaterLaakBackend.Controllers
     }
 
     // DELETE: api/Show/5
+    [Authorize(Roles="Medewerker, Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteShow(int id)
     {

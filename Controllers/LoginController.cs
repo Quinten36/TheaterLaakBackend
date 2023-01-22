@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using TheaterLaakBackend.Contexts;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TheaterLaakBackend.Controllers
 {
@@ -33,6 +34,7 @@ namespace TheaterLaakBackend.Controllers
         }
 
         // GET: api/Login
+        [Authorize(Roles="Admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Account>>> GetAccounts()
         {
@@ -102,9 +104,6 @@ namespace TheaterLaakBackend.Controllers
             }
             return Unauthorized();
         }
-
-
-
 
         [HttpPut]
         [Route("wwvergeten/{gebruikersnaam}")]

@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TheaterLaakBackend.Contexts;
 using TheaterLaakBackend.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TheaterLaakBackend.Controllers
 {
+  [Authorize(Roles="Medewerker, Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class ProgramController : ControllerBase
@@ -41,7 +43,7 @@ namespace TheaterLaakBackend.Controllers
             {
                 try
                 {
-                    query = query.Where(program => program.BeginDate.Date >= DateTime.Parse(startDateSearch));
+                    query = query.Where(program => program.BeginDate.AddMonths(1).Date <= DateTime.Parse(startDateSearch));
                 }
                 catch (FormatException e)
                 {
@@ -55,7 +57,7 @@ namespace TheaterLaakBackend.Controllers
             {
                 try
                 {
-                    query = query.Where(program => program.EndDate.Date <= DateTime.Parse(endDateSearch));
+                    query = query.Where(program => program.EndDate.Date >= DateTime.Parse(endDateSearch));
                 }
                 catch (FormatException e)
                 {
