@@ -62,11 +62,11 @@ namespace TheaterLaakBackend.Controllers
 
       if (succes == "true"){
         outputHTML = "<p style=\"color:green; font-size: 1.6em;font-weight: 600;\">Betaling gelukt</p>";
-        redirect = "http://localhost:3000/bestellingAfronden";
+        redirect = "https://theater-laak-backend-prod.azurewebsites.net/bestellingAfronden";
       }
       else{
         outputHTML = "<p style=\"color:red; font-size: 1.6em;font-weight: 600;\">Betaling is mislukt</p>";
-        redirect = "http://localhost:3000/winkelwagen";
+        redirect = "https://theater-laak-backend-prod.azurewebsites.net/winkelwagen";
       }
       var html = "<!DOCTYPE html><html><head></head><body>"+outputHTML+"<a href=\""+redirect+"\">Rond de betaling af</a></body></html>";
       return new ContentResult
