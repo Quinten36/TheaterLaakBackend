@@ -121,13 +121,13 @@ namespace TheaterLaakBackend.Controllers
         }
         
         [HttpGet]
-        [Route("/getReservationsByID/{id}/")]
+        [Route("getReservationsByID/{id}")]
         public async Task<IActionResult> getTicketById(string id)
         {
             var ticketsBijPersoon = _context.Tickets
                 .Include(t => t.Seat)
                 .Include(t => t.Show.Program)
-                .Where(r => r.AccountId.ToString() == id);
+                .Where(r => r.AccountId == id);
             if (ticketsBijPersoon == null)
             {
                 return BadRequest();
