@@ -22,7 +22,7 @@ public class MailSender
         {
             smtpClient.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
             smtpClient.Authenticate("WubWubTunes@gmail.com", "yazunnydzxgxhknd");
-
+            
                 try{
                 smtpClient.Send(mailMessage);
                 }

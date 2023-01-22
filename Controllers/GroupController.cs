@@ -88,7 +88,7 @@ namespace TheaterLaakBackend.Controllers
         {
           if (_context.Groups == null)
           {
-              return Problem("Entity set 'TheaterDbContext.Groups'  is null.");
+            return Problem("Entity set 'TheaterDbContext.Groups'  is null.");
           }
           // do Lookup sruff
           foreach (var i in groups) {
@@ -103,7 +103,7 @@ namespace TheaterLaakBackend.Controllers
             
           return Ok();
         }
-
+        
         // POST: api/Group
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]

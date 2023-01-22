@@ -91,8 +91,9 @@ namespace TheaterLaakBackend.Controllers
                 return Problem("Entity set 'TheaterDbContext.Tickets'  is null.");
             }
             _context.Tickets.Add(ticket);
+            SeatShowStatus seatShowStatus = await _context.SeatShowStatus.FirstAsync(status => status.SeatId == ticket.SeatId && status.ShowId == ticket.ShowId);
+            seatShowStatus.Status = "Occupied";
             await _context.SaveChangesAsync();
-
             return CreatedAtAction("GetTicket", new { id = ticket.Id }, ticket);
         }
 

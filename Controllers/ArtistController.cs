@@ -124,21 +124,22 @@ namespace TheaterLaakBackend.Controllers
         [HttpPost("lijst")]
         public async Task<ActionResult> PostArtist(string[] artists)
         {
-          if (_context.Artists == null)
-          {
-              return Problem("Entity set 'TheaterDbContext.Artists'  is null.");
-          }
-          // do Lookup sruff
-          foreach (var i in artists) {
-            var artist = new Artist();
-            artist.Name = i;
-            _context.Artists.Add(artist);
-            await _context.SaveChangesAsync();
-          }
-            
-          return Ok();
+            if (_context.Artists == null)
+            {
+                return Problem("Entity set 'TheaterDbContext.Artists'  is null.");
+            }
+            // do Lookup sruff
+            foreach (var i in artists) {
+                var artist = new Artist();
+                artist.Name = i;
+                _context.Artists.Add(artist);
+                await _context.SaveChangesAsync();
+            }
+
+            return Ok();
         }
 
+        
         // DELETE: api/Artist/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteArtist(int id)
