@@ -11,7 +11,7 @@ using TheaterLaakBackend.Contexts;
 namespace TheaterLaakBackend.Migrations.SqlLite
 {
     [DbContext(typeof(SqlLiteTheaterDbContext))]
-    [Migration("20230120195422_InitialMigration")]
+    [Migration("20230122155837_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -354,7 +354,7 @@ namespace TheaterLaakBackend.Migrations.SqlLite
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("AccountId")
+                    b.Property<int?>("AccountId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("AccountId1")
@@ -542,7 +542,7 @@ namespace TheaterLaakBackend.Migrations.SqlLite
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("AccountId")
+                    b.Property<int?>("AccountId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("AccountId1")

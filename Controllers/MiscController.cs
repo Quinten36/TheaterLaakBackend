@@ -56,5 +56,35 @@ namespace TheaterLaakBackend.Controllers
           ContentType = "text/html"
       };
     }   
+    
+    // GET: api/Account
+    [HttpPost]
+    [Route("setPayment")]
+    public ContentResult GetPayment([FromForm] string account, [FromForm] string succes, [FromForm] string reference)
+    {
+      // if (_context.Accounts == null)
+      // {
+      //   return NotFound();
+      // }
+      Console.WriteLine(succes);
+
+      string outputHTML;
+      string redirect;
+
+      if (succes == "true"){
+        outputHTML = "<p style=\"color:green; font-size: 1.6em;font-weight: 600;\">Betaling gelukt</p>";
+        redirect = "http://localhost:3000/bestellingAfronden";
+      }
+      else{
+        outputHTML = "<p style=\"color:red; font-size: 1.6em;font-weight: 600;\">Betaling is mislukt</p>";
+        redirect = "http://localhost:3000/winkelwagen";
+      }
+      var html = "<!DOCTYPE html><html><head></head><body>"+outputHTML+"<a href=\""+redirect+"\">Rond de betaling af</a></body></html>";
+      return new ContentResult
+      {
+          Content = html,
+          ContentType = "text/html"
+      };
+    }   
   }
 }
