@@ -19,11 +19,13 @@ namespace TheaterLaakBackend.Controllers
     [ApiController]
     public class RegistratieController : ControllerBase
     {
+        private readonly ILogger<RegistratieController> _logger;
         private readonly TheaterDbContext _context;
         private readonly UserManager<Account> _userManager;
 
-        public RegistratieController(TheaterDbContext context, UserManager<Account> userManager)
+        public RegistratieController(ILogger<RegistratieController> logger, TheaterDbContext context, UserManager<Account> userManager)
         {
+            _logger = logger;
             _context = context;
             _userManager = userManager;
         }
@@ -31,33 +33,45 @@ namespace TheaterLaakBackend.Controllers
         [HttpPost]
         public async Task<ActionResult<Account>> AddUser([FromBody] Account Account)
         {
-            // Check if account already exists
-            AccountInformationChecker AIC = new AccountInformationChecker(_context);
-            var UitslagUserNameCheck = AIC.BestaandeGebruikerCheck(Account.UserName, Account.Email);
-            if (UitslagUserNameCheck != "Succes")
+            try
             {
-              return BadRequest(new { message = UitslagUserNameCheck });
-            }
-            var UitslagPasswordCheck = AIC.PasswordCheck(Account.UserName, Account.Password);
-            if (UitslagPasswordCheck != "Succes")
-            {
-              return BadRequest(new { message = UitslagPasswordCheck });
-            }
-            HashPWs HashPasswordSha256 = new HashPWs();
-            Account.Password = HashPasswordSha256.Sha256(Account.Password);
-            // Add the new account to the database
-            var resultaat = await _userManager.CreateAsync(Account, Account.Password);
-            await _context.SaveChangesAsync();
-            
-            var _user = await _userManager.FindByNameAsync(Account.UserName);
-            await _userManager.AddToRoleAsync(_user, "Gast");
-            
+                // Check if account already exists
+                AccountInformationChecker AIC = new AccountInformationChecker(_context);
+                var UitslagUserNameCheck = AIC.BestaandeGebruikerCheck(Account.UserName, Account.Email);
+                if (UitslagUserNameCheck != "Succes")
+                {
+                    return BadRequest(new { message = UitslagUserNameCheck });
+                }
 
-            VerificatieCodeGenerator VCG = new VerificatieCodeGenerator(_context);
-            VCG.sendVertificatie(Account.Id, Account.Email);
+                var UitslagPasswordCheck = AIC.PasswordCheck(Account.UserName, Account.Password);
+                if (UitslagPasswordCheck != "Succes")
+                {
+                    return BadRequest(new { message = UitslagPasswordCheck });
+                }
+
+                HashPWs HashPasswordSha256 = new HashPWs();
+                Account.Password = HashPasswordSha256.Sha256(Account.Password);
+                // Add the new account to the database
+                var resultaat = await _userManager.CreateAsync(Account, Account.Password);
+                await _context.SaveChangesAsync();
+
+                var _user = await _userManager.FindByNameAsync(Account.UserName);
+                await _userManager.AddToRoleAsync(_user, "Gast");
+
+
+                VerificatieCodeGenerator VCG = new VerificatieCodeGenerator(_context);
+                VCG.sendVertificatie(Account.Id, Account.Email);
+                
+                return !resultaat.Succeeded ? new BadRequestObjectResult(resultaat) : Ok(new { id = Account.Id });
+            }
+            catch (Exception e)
+            {
+                _logger.LogCritical(e.Message);
+                _logger.LogCritical(e.StackTrace);
+            }
 
             // return ;
-            return !resultaat.Succeeded ? new BadRequestObjectResult(resultaat) : Ok(new { id = Account.Id });
+            throw new Exception();
         }
 
         [HttpPut]
