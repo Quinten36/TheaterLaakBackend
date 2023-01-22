@@ -95,7 +95,7 @@ namespace TheaterLaakBackend.Controllers
             var group = new Group();
             group.Name = i.Name;
             group.Logo = i.Logo;
-            if (i.Website.length > 0)
+            if (i.Website.Length > 0)
               group.Website = i.Website;
             _context.Groups.Add(group);
             await _context.SaveChangesAsync();
