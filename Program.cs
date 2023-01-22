@@ -55,7 +55,7 @@ builder.Services.Configure<IdentityOptions>(options =>
   // Gebruiker instellingen
   options.User.RequireUniqueEmail = true;
   options.User.AllowedUserNameCharacters =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"; // here is the issue
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-._@+/ "; // here is the issue
 });
 
 //JWT tokens
