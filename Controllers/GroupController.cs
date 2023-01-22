@@ -81,6 +81,29 @@ namespace TheaterLaakBackend.Controllers
             return NoContent();
         }
 
+        // POST: api/Group/lijst
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("lijst")]
+        public async Task<ActionResult> PostGroups(List<Group> groups)
+        {
+          if (_context.Groups == null)
+          {
+              return Problem("Entity set 'TheaterDbContext.Groups'  is null.");
+          }
+          // do Lookup sruff
+          foreach (var i in groups) {
+            var group = new Group();
+            group.Name = i.Name;
+            group.Logo = i.Logo;
+            if (i.Website.Length > 0)
+              group.Website = i.Website;
+            _context.Groups.Add(group);
+            await _context.SaveChangesAsync();
+          }
+            
+          return Ok();
+        }
+
         // POST: api/Group
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
