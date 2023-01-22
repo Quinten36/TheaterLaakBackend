@@ -125,7 +125,7 @@ public class DbEntryGenerator
             var order  = new Order
             {
                 HasPaid = _faker.Random.Bool(),
-                AccountId = _faker.Random.Int(1, accounts.Count())
+                AccountId = accounts.ToList().ElementAt(new Random().Next(1, accounts.Count()-1)).Id
             };
             
             _context.Orders.Add(order);
@@ -171,7 +171,7 @@ public class DbEntryGenerator
                 Start = start,
                 End = start.AddHours(2),
                 HasPaid = _faker.Random.Bool(),
-                AccountId = _faker.Random.Int(1, accounts.Count()),
+                AccountId = accounts.ToList().ElementAt(new Random().Next(1, accounts.Count()-1)).Id,
                 HallId = _faker.Random.Int(1, halls.Count())
                 
             };
@@ -222,7 +222,7 @@ public class DbEntryGenerator
             var ticket = new Ticket()
             {
                 SeatId = _faker.Random.Int(1, seats.Count()),
-                AccountId = _faker.Random.Int(1, accounts.Count()),
+                AccountId = accounts.ToList().ElementAt(new Random().Next(1, accounts.Count()-1)).Id,
                 ShowId = _faker.Random.Int(1, shows.Count()),
                 OrderId = _faker.Random.Int(1, orders.Count())
             };

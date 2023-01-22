@@ -11,7 +11,7 @@ using TheaterLaakBackend.Contexts;
 namespace TheaterLaakBackend.Migrations.SqlLite
 {
     [DbContext(typeof(SqlLiteTheaterDbContext))]
-    [Migration("20230122155837_InitialMigration")]
+    [Migration("20230122201736_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -354,10 +354,7 @@ namespace TheaterLaakBackend.Migrations.SqlLite
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("AccountId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("AccountId1")
+                    b.Property<string>("AccountId")
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("HasPaid")
@@ -365,7 +362,7 @@ namespace TheaterLaakBackend.Migrations.SqlLite
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountId1");
+                    b.HasIndex("AccountId");
 
                     b.ToTable("Orders");
                 });
@@ -419,10 +416,8 @@ namespace TheaterLaakBackend.Migrations.SqlLite
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("AccountId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("AccountId1")
+                    b.Property<string>("AccountId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("End")
@@ -439,7 +434,7 @@ namespace TheaterLaakBackend.Migrations.SqlLite
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountId1");
+                    b.HasIndex("AccountId");
 
                     b.HasIndex("HallId");
 
@@ -542,10 +537,7 @@ namespace TheaterLaakBackend.Migrations.SqlLite
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("AccountId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("AccountId1")
+                    b.Property<string>("AccountId")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("OrderId")
@@ -559,7 +551,7 @@ namespace TheaterLaakBackend.Migrations.SqlLite
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountId1");
+                    b.HasIndex("AccountId");
 
                     b.HasIndex("OrderId");
 
@@ -711,7 +703,7 @@ namespace TheaterLaakBackend.Migrations.SqlLite
                 {
                     b.HasOne("TheaterLaakBackend.Models.Account", "Account")
                         .WithMany("Orders")
-                        .HasForeignKey("AccountId1");
+                        .HasForeignKey("AccountId");
 
                     b.Navigation("Account");
                 });
@@ -731,7 +723,9 @@ namespace TheaterLaakBackend.Migrations.SqlLite
                 {
                     b.HasOne("TheaterLaakBackend.Models.Account", "Account")
                         .WithMany("Reservations")
-                        .HasForeignKey("AccountId1");
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TheaterLaakBackend.Models.Hall", "Hall")
                         .WithMany("Reservations")
@@ -805,7 +799,7 @@ namespace TheaterLaakBackend.Migrations.SqlLite
                 {
                     b.HasOne("TheaterLaakBackend.Models.Account", "Account")
                         .WithMany()
-                        .HasForeignKey("AccountId1");
+                        .HasForeignKey("AccountId");
 
                     b.HasOne("TheaterLaakBackend.Models.Order", "Order")
                         .WithMany("Tickets")

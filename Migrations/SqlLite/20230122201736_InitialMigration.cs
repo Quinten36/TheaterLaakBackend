@@ -251,15 +251,14 @@ namespace TheaterLaakBackend.Migrations.SqlLite
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     HasPaid = table.Column<bool>(type: "INTEGER", nullable: false),
-                    AccountId = table.Column<int>(type: "INTEGER", nullable: true),
-                    AccountId1 = table.Column<string>(type: "TEXT", nullable: true)
+                    AccountId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Orders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Orders_AspNetUsers_AccountId1",
-                        column: x => x.AccountId1,
+                        name: "FK_Orders_AspNetUsers_AccountId",
+                        column: x => x.AccountId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 });
@@ -348,18 +347,18 @@ namespace TheaterLaakBackend.Migrations.SqlLite
                     Start = table.Column<DateTime>(type: "TEXT", nullable: false),
                     End = table.Column<DateTime>(type: "TEXT", nullable: false),
                     HasPaid = table.Column<bool>(type: "INTEGER", nullable: false),
-                    AccountId = table.Column<int>(type: "INTEGER", nullable: false),
-                    AccountId1 = table.Column<string>(type: "TEXT", nullable: true),
+                    AccountId = table.Column<string>(type: "TEXT", nullable: false),
                     HallId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Reservations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reservations_AspNetUsers_AccountId1",
-                        column: x => x.AccountId1,
+                        name: "FK_Reservations_AspNetUsers_AccountId",
+                        column: x => x.AccountId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Reservations_Halls_HallId",
                         column: x => x.HallId,
@@ -483,8 +482,7 @@ namespace TheaterLaakBackend.Migrations.SqlLite
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     SeatId = table.Column<int>(type: "INTEGER", nullable: false),
-                    AccountId = table.Column<int>(type: "INTEGER", nullable: true),
-                    AccountId1 = table.Column<string>(type: "TEXT", nullable: true),
+                    AccountId = table.Column<string>(type: "TEXT", nullable: true),
                     ShowId = table.Column<int>(type: "INTEGER", nullable: false),
                     OrderId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
@@ -492,8 +490,8 @@ namespace TheaterLaakBackend.Migrations.SqlLite
                 {
                     table.PrimaryKey("PK_Tickets", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Tickets_AspNetUsers_AccountId1",
-                        column: x => x.AccountId1,
+                        name: "FK_Tickets_AspNetUsers_AccountId",
+                        column: x => x.AccountId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
@@ -568,9 +566,9 @@ namespace TheaterLaakBackend.Migrations.SqlLite
                 column: "ProgramsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_AccountId1",
+                name: "IX_Orders_AccountId",
                 table: "Orders",
-                column: "AccountId1");
+                column: "AccountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Programs_GroupId",
@@ -578,9 +576,9 @@ namespace TheaterLaakBackend.Migrations.SqlLite
                 column: "GroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservations_AccountId1",
+                name: "IX_Reservations_AccountId",
                 table: "Reservations",
-                column: "AccountId1");
+                column: "AccountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservations_HallId",
@@ -613,9 +611,9 @@ namespace TheaterLaakBackend.Migrations.SqlLite
                 column: "ProgramId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tickets_AccountId1",
+                name: "IX_Tickets_AccountId",
                 table: "Tickets",
-                column: "AccountId1");
+                column: "AccountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tickets_OrderId",

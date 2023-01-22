@@ -7,7 +7,7 @@ public class Ticket
     public int SeatId { get; set; }
     public Seat? Seat { get; set; }
     
-    public int? AccountId { get; set; }
+    public string? AccountId { get; set; }
     public Account? Account { get; set; }
     
     public int ShowId { get; set; }
