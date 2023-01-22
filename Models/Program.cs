@@ -15,7 +15,7 @@ public class Program
     public List<Genre> Genres { get; } = new();
 
     public int GroupId { get; set; }
-    public Group? Group { get; set; }
+    public Group Group { get; set; }
 
     public List<Show> Shows { get; } = new();
 }

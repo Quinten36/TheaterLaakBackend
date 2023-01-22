@@ -21,7 +21,7 @@ public class MailSender
         using (var smtpClient = new SmtpClient())
         {
             smtpClient.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
-            smtpClient.Authenticate("WubWubTunes@gmail.com", "yazunnydzxgxhknd");
+            smtpClient.Authenticate("WubWubTunes@gmail.com", "ptbnksiopfeezrvt");
 
                 try{
                 smtpClient.Send(mailMessage);

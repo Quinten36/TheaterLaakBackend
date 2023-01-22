@@ -56,7 +56,7 @@ namespace TheaterLaakBackend.Controllers
           ContentType = "text/html"
       };
     }   
-
+    
     // GET: api/Account
     [HttpPost]
     [Route("setPayment")]

@@ -76,7 +76,7 @@ namespace TheaterLaakBackend.Controllers
             }
 
             //get username from email
-            var username = _context.Accounts.Single(a => a.UserName == gebruikerLogin.UserName|| a.Email == gebruikerLogin.Email).UserName;
+            var username = _context.Accounts.Single(a => a.Email == gebruikerLogin.Email).UserName;
             var _user = await _userManager.FindByNameAsync(username);
             //if user is found
             if (_user != null)
