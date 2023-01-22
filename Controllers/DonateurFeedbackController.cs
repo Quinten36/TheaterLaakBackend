@@ -1,13 +1,13 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
-
+using Microsoft.AspNetCore.Authorization;
 using TheaterLaakBackend.Models;
 using Microsoft.AspNetCore.Identity;
 using TheaterLaakBackend.Contexts;
 
 namespace TheaterLaakBackend.Controllers;
+[Authorize(Roles="Donateur")]
 public class DonateurFeedbackController : ControllerBase
 {
     private readonly TheaterDbContext _context;
@@ -21,6 +21,7 @@ public class DonateurFeedbackController : ControllerBase
         _signInManager = signInManager;
         _context = context;
     }
+
     [Route("api/[controller]")]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<FeedbackDonateurs>>> getFeedback()
@@ -32,6 +33,7 @@ public class DonateurFeedbackController : ControllerBase
 
         return await _context.FeedbackDonateurs.ToListAsync();
     }
+    
     [Route("api/[controller]")]
     [HttpPost]
     public async Task<ActionResult> setFeedback([FromBody] FeedbackDonateurs feedbackDonateurs)

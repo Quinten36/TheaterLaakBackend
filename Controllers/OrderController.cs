@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TheaterLaakBackend.Contexts;
 using TheaterLaakBackend.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TheaterLaakBackend.Controllers
 {
@@ -22,6 +23,7 @@ namespace TheaterLaakBackend.Controllers
         }
 
         // GET: api/Order
+        [Authorize(Roles="Medewerker, Admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
         {
@@ -52,6 +54,7 @@ namespace TheaterLaakBackend.Controllers
 
         // PUT: api/Order/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles="Medewerker, Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutOrder(int id, Order order)
         {
@@ -83,6 +86,7 @@ namespace TheaterLaakBackend.Controllers
 
         // POST: api/Order
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles="Medewerker, Admin")]
         [HttpPost]
         public async Task<ActionResult<Order>> PostOrder(Order order)
         {
@@ -97,6 +101,7 @@ namespace TheaterLaakBackend.Controllers
         }
 
         // DELETE: api/Order/5
+        [Authorize(Roles="Medewerker, Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {

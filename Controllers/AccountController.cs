@@ -22,6 +22,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using TheaterLaakBackend.Contexts;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TheaterLaakBackend.Controllers
 {
@@ -39,6 +40,7 @@ namespace TheaterLaakBackend.Controllers
     }
 
     // GET: api/Account
+    [Authorize(Roles="Medewerker")]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Account>>> GetAccounts()
     {
@@ -186,22 +188,8 @@ namespace TheaterLaakBackend.Controllers
       return NoContent();
     }
 
-    // POST: api/Account
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPost]
-    public async Task<ActionResult<Account>> PostAccount(Account account)
-    {
-      if (_context.Accounts == null)
-      {
-        return Problem("Entity set 'TheaterDbContext.Accounts'  is null.");
-      }
-      _context.Accounts.Add(account);
-      await _context.SaveChangesAsync();
-
-      return CreatedAtAction("GetAccount", new { id = account.Id }, account);
-    }
-
     // DELETE: api/Account/5
+    [Authorize(Roles="Medewerker")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAccount(int id)
     {
@@ -220,8 +208,6 @@ namespace TheaterLaakBackend.Controllers
 
       return NoContent();
     }
-
- 
 
     private bool AccountExists(string id)
     {

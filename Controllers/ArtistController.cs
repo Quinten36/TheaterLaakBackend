@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TheaterLaakBackend.Contexts;
 using TheaterLaakBackend.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TheaterLaakBackend.Controllers
 {
@@ -23,6 +24,8 @@ namespace TheaterLaakBackend.Controllers
 
         // GET: api/Artist
         [HttpGet]
+        // 
+        
         public async Task<ActionResult<IEnumerable<Artist>>> GetArtists()
         {
           if (_context.Artists == null)

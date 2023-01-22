@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TheaterLaakBackend.Contexts;
 using TheaterLaakBackend.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TheaterLaakBackend.Controllers
 {
@@ -52,6 +53,7 @@ namespace TheaterLaakBackend.Controllers
 
         // PUT: api/Ticket/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles="Medewerker, Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTicket(int id, Ticket ticket)
         {
@@ -98,6 +100,7 @@ namespace TheaterLaakBackend.Controllers
         }
 
         // DELETE: api/Ticket/5
+        [Authorize(Roles="Medewerker, Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTicket(int id)
         {
@@ -116,6 +119,7 @@ namespace TheaterLaakBackend.Controllers
 
             return NoContent();
         }
+        
         [HttpGet]
         [Route("/getReservationsByID/{id}/")]
         public async Task<IActionResult> getTicketById(string id)

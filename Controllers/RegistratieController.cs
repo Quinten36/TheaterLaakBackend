@@ -11,6 +11,7 @@ using TheaterLaakBackend.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TheaterLaakBackend.Contexts;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TheaterLaakBackend.Controllers
 {
@@ -47,6 +48,8 @@ namespace TheaterLaakBackend.Controllers
             // Add the new account to the database
             var resultaat = await _userManager.CreateAsync(Account, Account.Password);
             await _context.SaveChangesAsync();
+
+            Console.WriteLine(resultaat);
             
             var _user = await _userManager.FindByNameAsync(Account.UserName);
             Console.WriteLine(_user);

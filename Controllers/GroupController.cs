@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TheaterLaakBackend.Contexts;
 using TheaterLaakBackend.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TheaterLaakBackend.Controllers
 {
@@ -52,6 +53,7 @@ namespace TheaterLaakBackend.Controllers
 
         // PUT: api/Group/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles="Artist, Medewerker, Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutGroup(int id, Group @group)
         {
@@ -83,6 +85,7 @@ namespace TheaterLaakBackend.Controllers
 
         // POST: api/Group/lijst
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles="Medewerker, Admin")]
         [HttpPost("lijst")]
         public async Task<ActionResult> PostGroups(List<Group> groups)
         {
@@ -106,6 +109,7 @@ namespace TheaterLaakBackend.Controllers
         
         // POST: api/Group
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles="Medewerker, Admin")]
         [HttpPost]
         public async Task<ActionResult<Group>> PostGroup(Group @group)
         {
@@ -120,6 +124,7 @@ namespace TheaterLaakBackend.Controllers
         }
 
         // DELETE: api/Group/5
+        [Authorize(Roles="Medewerker, Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGroup(int id)
         {

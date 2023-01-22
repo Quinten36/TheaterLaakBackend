@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TheaterLaakBackend.Contexts;
 using TheaterLaakBackend.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TheaterLaakBackend.Controllers
 {
+  [Authorize(Roles="Medewerker, Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class ProgramController : ControllerBase
