@@ -44,7 +44,7 @@ namespace TheaterLaakBackend.Controllers
     [Route("setToken")]
     public ContentResult GetAccounts([FromForm] string token)
     {
-      var html = "<!DOCTYPE html><html><head></head><body><a href=\"http://localhost:3000/heeftAutherized/"+token+"\">Klik here to proceed</a></body></html>";
+      var html = "<!DOCTYPE html><html><head></head><body><a href=\"https://black-moss-0a8543303.2.azurestaticapps.net/heeftAutherized/"+token+"\">Klik here to proceed</a></body></html>";
       return new ContentResult
       {
           Content = html,

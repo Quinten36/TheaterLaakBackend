@@ -71,8 +71,8 @@ builder.Services.AddAuthentication(opt =>
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = "http://localhost:5086",
-                    ValidAudience = "http://localhost:5086",
+                    ValidIssuer = "https://theater-laak-backend-prod.azurewebsites.net/",
+                    ValidAudience = "https://theater-laak-backend-prod.azurewebsites.net/",
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("awef98awef978haweof8g7aw789efhh789awef8h9awh89efh89awe98f89uawef9j8aw89hefawef"))
                 };
             });

@@ -113,8 +113,8 @@ namespace TheaterLaakBackend.Controllers
       //make the jwt token
       var tokenOptions = new JwtSecurityToken
       (
-        issuer: "http://localhost:5086",
-        audience: "http://localhost:5086",
+        issuer: "https://theater-laak-backend-prod.azurewebsites.net/",
+        audience: "https://theater-laak-backend-prod.azurewebsites.net/",
         claims: claims,
         expires: DateTime.Now.AddMinutes(120),
         signingCredentials: signingCredentials
